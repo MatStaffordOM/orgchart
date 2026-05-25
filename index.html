@@ -585,6 +585,21 @@
     flex-shrink: 0;
   }
 
+  .card-reports-badge .br-direct {
+    font-weight: 700;
+  }
+
+  .card-reports-badge .br-divider {
+    opacity: 0.55;
+    margin: 0 1px;
+    font-weight: 500;
+  }
+
+  .card-reports-badge .br-total {
+    opacity: 0.85;
+    font-weight: 600;
+  }
+
   /* When reports bubbled up from a vacant role below, the badge gets a subtle
      upward chevron mark to signal the bubble-up. */
   .card-reports-badge.is-bubbled::before {
@@ -1084,7 +1099,7 @@
     .canvas { padding: 28px; height: calc(100vh - var(--header-h) - 100px); }
     .header-meta { gap: 14px; }
     .stat-group { display: none; }
-    .stat-group:first-child { display: flex; }
+    .stat-group:last-of-type { display: flex; }
     .tier-legend { gap: 10px; }
     .tier-pill { font-size: 9px; }
   }
@@ -1106,6 +1121,10 @@
     <div class="stat-group">
       <span class="stat-num" id="stat-roles">0</span>
       <span class="stat-label">Roles</span>
+    </div>
+    <div class="stat-group">
+      <span class="stat-num" id="stat-headcount">0</span>
+      <span class="stat-label">Headcount</span>
     </div>
     <div class="save-status" id="save-status">
       <span class="dot"></span>
@@ -1256,6 +1275,26 @@ function _bubbledReportsBelow(nodeId) {
 
 function hasVacantDirectChild(nodeId) {
   return getChildren(nodeId).some(k => isVacant(k));
+}
+
+// Total headcount under supervision at ALL levels.
+// Counts every non-vacant descendant. Vacant intermediaries are walked
+// through (their subordinates still count) but the vacant role itself
+// is not counted as a person. If the node itself is vacant, returns 0
+// (a vacant role doesn't "supervise" anyone).
+function totalHeadcount(nodeId) {
+  const node = state.nodes[nodeId];
+  if (!node || isVacant(node)) return 0;
+  return _countFilledDescendants(nodeId);
+}
+
+function _countFilledDescendants(nodeId) {
+  let total = 0;
+  for (const kid of getChildren(nodeId)) {
+    if (!isVacant(kid)) total += 1;
+    total += _countFilledDescendants(kid.id); // recurse through vacant + filled
+  }
+  return total;
 }
 
 // -------- Persistence --------
@@ -1509,10 +1548,25 @@ function renderCard(node, childCount, isCollapsed) {
   const tierLabel = `Tier ${String(node.tier).padStart(2, '0')}`;
   const vacant = isVacant(node);
   const effectiveCount = effectiveDirectReports(node.id);
+  const totalCount = totalHeadcount(node.id);
   const bubbled = !vacant && hasVacantDirectChild(node.id);
-  const badgeTitle = bubbled
-    ? `${effectiveCount} effective direct report${effectiveCount === 1 ? '' : 's'} \u2014 includes reports bubbled up from vacant position${getChildren(node.id).filter(k => isVacant(k)).length > 1 ? 's' : ''} below`
-    : `${effectiveCount} direct report${effectiveCount === 1 ? '' : 's'}`;
+  const showSplit = totalCount > effectiveCount; // only show /N when extends deeper
+
+  // Tooltip explains both numbers in plain language
+  const tooltipParts = [];
+  tooltipParts.push(`${effectiveCount} direct report${effectiveCount === 1 ? '' : 's'}`);
+  if (showSplit) {
+    tooltipParts.push(`${totalCount} total under supervision (all tiers below)`);
+  }
+  if (bubbled) {
+    tooltipParts.push('includes reports bubbled up from vacant position(s)');
+  }
+  const badgeTitle = tooltipParts.join(' \u00b7 ');
+
+  // Badge inner HTML — split format only when total > direct
+  const badgeContent = showSplit
+    ? `<span class="br-direct">${effectiveCount}</span><span class="br-divider">/</span><span class="br-total">${totalCount}</span>`
+    : `<span class="br-direct">${effectiveCount}</span>`;
 
   return `
     <div class="card ${isCollapsed ? 'is-collapsed' : ''} ${vacant ? 'is-vacant' : ''}"
@@ -1539,7 +1593,7 @@ function renderCard(node, childCount, isCollapsed) {
       ` : ''}
       ${openMenuId === node.id ? renderMenu(node) : ''}
       ${effectiveCount > 0 ? `
-        <span class="card-reports-badge ${bubbled ? 'is-bubbled' : ''}" title="${badgeTitle}" aria-label="${badgeTitle}">${effectiveCount}</span>
+        <span class="card-reports-badge ${bubbled ? 'is-bubbled' : ''}" title="${badgeTitle}" aria-label="${badgeTitle}">${badgeContent}</span>
       ` : ''}
     </div>
     ${childCount > 0 ? `
@@ -1567,7 +1621,10 @@ function renderMenu(node) {
 
 function updateHeaderStats() {
   document.getElementById('stat-tiers').textContent = maxTier();
-  document.getElementById('stat-roles').textContent = Object.keys(state.nodes).length;
+  const allNodes = Object.values(state.nodes);
+  document.getElementById('stat-roles').textContent = allNodes.length;
+  const filled = allNodes.filter(n => !isVacant(n)).length;
+  document.getElementById('stat-headcount').textContent = filled;
 }
 
 function renderTierLegend() {
