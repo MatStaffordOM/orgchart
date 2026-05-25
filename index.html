@@ -630,6 +630,113 @@
     letter-spacing: 0.14em;
   }
 
+  /* ============ DRAG & DROP ============ */
+  .card[draggable="true"] {
+    cursor: grab;
+  }
+
+  .card[draggable="true"]:active {
+    cursor: grabbing;
+  }
+
+  body.is-dragging,
+  body.is-dragging * {
+    cursor: grabbing !important;
+    user-select: none;
+  }
+
+  .card.is-being-dragged {
+    opacity: 0.35;
+    transform: scale(0.985);
+    box-shadow: none !important;
+  }
+
+  /* Drop zone: become a child of this card */
+  .card.is-drop-child {
+    outline: 2px dashed var(--orange-core);
+    outline-offset: 3px;
+    background: rgba(232, 92, 26, 0.05);
+    box-shadow: 0 8px 28px -10px rgba(232, 92, 26, 0.45);
+  }
+
+  .card.is-vacant.is-drop-child {
+    background:
+      repeating-linear-gradient(
+        135deg,
+        rgba(232, 92, 26, 0.07) 0,
+        rgba(232, 92, 26, 0.07) 10px,
+        rgba(232, 92, 26, 0.12) 10px,
+        rgba(232, 92, 26, 0.12) 12px
+      );
+  }
+
+  /* Drop zone: insert as sibling above / below the target card */
+  .card.is-drop-before::before,
+  .card.is-drop-after::after {
+    content: '';
+    position: absolute;
+    left: -6px;
+    right: -6px;
+    height: 4px;
+    background: var(--orange-core);
+    border-radius: 2px;
+    box-shadow: 0 0 0 2px var(--white), 0 0 14px rgba(232, 92, 26, 0.55);
+    z-index: 10;
+    pointer-events: none;
+    animation: dropPulse 0.9s ease-in-out infinite;
+  }
+
+  .card.is-drop-before::before {
+    top: -14px;
+  }
+
+  .card.is-drop-after::after {
+    bottom: -14px;
+  }
+
+  .card.is-drop-before::before::after,
+  .card.is-drop-after::after::after {
+    /* end caps for the drop line */
+    content: '';
+  }
+
+  @keyframes dropPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+  }
+
+  /* Drag tooltip — floats near cursor describing the drop action */
+  .drag-hint {
+    position: fixed;
+    pointer-events: none;
+    background: var(--navy-deep);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    border-radius: 3px;
+    z-index: 9999;
+    box-shadow: 0 6px 18px -6px rgba(0,0,0,0.45);
+    transform: translate(14px, 18px);
+    display: none;
+    white-space: nowrap;
+  }
+
+  .drag-hint.is-visible {
+    display: block;
+  }
+
+  .drag-hint.is-invalid {
+    background: var(--danger);
+  }
+
+  .drag-hint .accent {
+    color: var(--orange-light);
+  }
+
   /* Collapse toggle button on right edge of card */
   .card-collapse {
     position: absolute;
@@ -1036,6 +1143,8 @@
 
 <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true"></div>
 
+<div class="drag-hint" id="drag-hint"></div>
+
 <script>
 // ============================================================
 //   PFi Organisation Chart
@@ -1252,6 +1361,62 @@ function toggleCollapse(id) {
   render();
 }
 
+// -------- Move / reorder (used by drag-and-drop) --------
+function moveNode(draggedId, target) {
+  // target: { type: 'child' | 'before' | 'after', refId: string }
+  const node = state.nodes[draggedId];
+  if (!node || !node.parentId) return false; // root can't be moved
+
+  let newParentId, newOrder;
+
+  if (target.type === 'child') {
+    newParentId = target.refId;
+    if (newParentId === draggedId) return false;
+    if (getDescendantIds(draggedId).includes(newParentId)) return false; // cycle
+
+    const siblings = getChildren(newParentId).filter(s => s.id !== draggedId);
+    newOrder = siblings.length; // append at end
+  } else {
+    const ref = state.nodes[target.refId];
+    if (!ref || !ref.parentId) return false; // root has no siblings
+    if (ref.id === draggedId) return false;
+    newParentId = ref.parentId;
+    if (newParentId === draggedId) return false;
+    if (getDescendantIds(draggedId).includes(newParentId)) return false; // cycle
+
+    const refOrder = ref.order || 0;
+    newOrder = target.type === 'before' ? refOrder - 0.5 : refOrder + 0.5;
+  }
+
+  const oldParentId = node.parentId;
+  node.parentId = newParentId;
+  node.order = newOrder;
+
+  normalizeOrder(newParentId);
+  if (oldParentId !== newParentId) normalizeOrder(oldParentId);
+
+  recalculateTiersFrom(draggedId);
+
+  saveState();
+  render();
+  return true;
+}
+
+function normalizeOrder(parentId) {
+  const siblings = Object.values(state.nodes)
+    .filter(n => n.parentId === parentId)
+    .sort((a, b) => (a.order || 0) - (b.order || 0));
+  siblings.forEach((s, i) => { s.order = i; });
+}
+
+function recalculateTiersFrom(nodeId) {
+  const node = state.nodes[nodeId];
+  if (!node) return;
+  const newTier = node.parentId ? (state.nodes[node.parentId].tier + 1) : 1;
+  node.tier = newTier;
+  getChildren(nodeId).forEach(c => recalculateTiersFrom(c.id));
+}
+
 function collapseAll() {
   Object.values(state.nodes).forEach(n => {
     if (getChildren(n.id).length > 0 && n.id !== state.rootId) {
@@ -1352,7 +1517,8 @@ function renderCard(node, childCount, isCollapsed) {
   return `
     <div class="card ${isCollapsed ? 'is-collapsed' : ''} ${vacant ? 'is-vacant' : ''}"
          style="--tier-color: ${color}"
-         data-id="${node.id}">
+         data-id="${node.id}"
+         draggable="${node.parentId ? 'true' : 'false'}">
       <div class="card-header">
         <span class="card-tier">${tierLabel}${vacant ? ' \u00b7 <span class="tier-vacant">Vacant</span>' : ''}</span>
         <button class="card-menu-btn" data-action="toggle-menu" data-id="${node.id}" aria-label="Card actions">
@@ -1763,6 +1929,226 @@ document.getElementById('file-input').addEventListener('change', (e) => {
   const file = e.target.files[0];
   if (file) importJson(file);
   e.target.value = '';
+});
+
+// ============================================================
+//   DRAG & DROP
+// ============================================================
+const dragState = {
+  draggedId: null,
+  dropTargetId: null,
+  dropMode: null   // 'child' | 'before' | 'after' | null
+};
+
+const canvas = document.getElementById('canvas');
+const dragHint = document.getElementById('drag-hint');
+let scrollInterval = null;
+
+canvas.addEventListener('dragstart', (e) => {
+  // Don't initiate drag from interactive sub-elements
+  if (e.target.closest('.card-menu-btn') ||
+      e.target.closest('.card-menu-dropdown') ||
+      e.target.closest('.card-collapse') ||
+      e.target.closest('.card-reports-badge')) {
+    e.preventDefault();
+    return;
+  }
+
+  const card = e.target.closest('.card');
+  if (!card) return;
+  const id = card.dataset.id;
+  const node = state.nodes[id];
+  if (!node || !node.parentId) {
+    // Root can't be dragged
+    e.preventDefault();
+    return;
+  }
+
+  // Close any open menu before dragging
+  if (openMenuId) {
+    openMenuId = null;
+    render();
+  }
+
+  dragState.draggedId = id;
+  try {
+    e.dataTransfer.setData('text/plain', id);
+    e.dataTransfer.effectAllowed = 'move';
+  } catch (_) { /* some browsers */ }
+
+  // Defer the dragging-class so the browser captures the card image first
+  requestAnimationFrame(() => {
+    const stillThere = document.querySelector(`.card[data-id="${id}"]`);
+    if (stillThere && dragState.draggedId === id) {
+      stillThere.classList.add('is-being-dragged');
+    }
+    document.body.classList.add('is-dragging');
+  });
+});
+
+canvas.addEventListener('dragover', (e) => {
+  if (!dragState.draggedId) return;
+  handleAutoScroll(e);
+
+  const card = e.target.closest('.card');
+  if (!card) {
+    setDropTarget(null, null);
+    hideHint();
+    return;
+  }
+
+  const targetId = card.dataset.id;
+  const draggedId = dragState.draggedId;
+  if (!targetId || !state.nodes[targetId]) {
+    setDropTarget(null, null);
+    hideHint();
+    return;
+  }
+
+  // Invalid targets: self or any descendant of dragged (would create a cycle)
+  if (targetId === draggedId || getDescendantIds(draggedId).includes(targetId)) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'none';
+    setDropTarget(null, null);
+    showHint(e, 'Can\u2019t drop here', true);
+    return;
+  }
+
+  // Determine drop zone based on cursor Y within the card
+  const rect = card.getBoundingClientRect();
+  const y = e.clientY - rect.top;
+  const h = rect.height;
+  const targetNode = state.nodes[targetId];
+  const targetIsRoot = !targetNode.parentId;
+
+  let mode;
+  if (targetIsRoot) {
+    mode = 'child'; // only valid drop on root is "become its child"
+  } else if (y < h * 0.30) {
+    mode = 'before';
+  } else if (y > h * 0.70) {
+    mode = 'after';
+  } else {
+    mode = 'child';
+  }
+
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  setDropTarget(targetId, mode);
+
+  // Hint text describing what the drop will do
+  const draggedNode = state.nodes[draggedId];
+  const draggedLabel = (draggedNode.name || draggedNode.role || 'role').trim();
+  const targetLabel = (targetNode.name || targetNode.role || 'role').trim();
+  let hintText;
+  if (mode === 'child') {
+    hintText = `Move under <span class="accent">${escapeHtml(targetLabel)}</span>`;
+  } else if (mode === 'before') {
+    hintText = `Place above <span class="accent">${escapeHtml(targetLabel)}</span>`;
+  } else {
+    hintText = `Place below <span class="accent">${escapeHtml(targetLabel)}</span>`;
+  }
+  showHint(e, hintText, false);
+});
+
+canvas.addEventListener('drop', (e) => {
+  if (!dragState.draggedId) return;
+  e.preventDefault();
+  const { draggedId, dropTargetId, dropMode } = dragState;
+  if (dropTargetId && dropMode) {
+    moveNode(draggedId, { type: dropMode, refId: dropTargetId });
+  }
+  endDrag();
+});
+
+canvas.addEventListener('dragend', () => {
+  endDrag();
+});
+
+// Cancel drag if user releases over modal or off-canvas
+document.addEventListener('dragend', () => {
+  endDrag();
+});
+
+function setDropTarget(targetId, mode) {
+  if (dragState.dropTargetId === targetId && dragState.dropMode === mode) return;
+  clearDropIndicators();
+  dragState.dropTargetId = targetId;
+  dragState.dropMode = mode;
+  if (!targetId || !mode) return;
+
+  const targetCard = document.querySelector(`.card[data-id="${targetId}"]`);
+  if (!targetCard) return;
+  if (mode === 'child') targetCard.classList.add('is-drop-child');
+  else if (mode === 'before') targetCard.classList.add('is-drop-before');
+  else if (mode === 'after') targetCard.classList.add('is-drop-after');
+}
+
+function clearDropIndicators() {
+  document.querySelectorAll('.is-drop-child, .is-drop-before, .is-drop-after')
+    .forEach(el => el.classList.remove('is-drop-child', 'is-drop-before', 'is-drop-after'));
+}
+
+function showHint(e, html, invalid) {
+  dragHint.innerHTML = html;
+  dragHint.classList.toggle('is-invalid', !!invalid);
+  dragHint.classList.add('is-visible');
+  dragHint.style.left = e.clientX + 'px';
+  dragHint.style.top = e.clientY + 'px';
+}
+
+function hideHint() {
+  dragHint.classList.remove('is-visible');
+}
+
+function handleAutoScroll(e) {
+  const rect = canvas.getBoundingClientRect();
+  const edge = 90;
+  const speed = 14;
+  let dx = 0, dy = 0;
+
+  if (e.clientX < rect.left + edge) dx = -speed;
+  else if (e.clientX > rect.right - edge) dx = speed;
+
+  if (e.clientY < rect.top + edge) dy = -speed;
+  else if (e.clientY > rect.bottom - edge) dy = speed;
+
+  if (dx === 0 && dy === 0) {
+    if (scrollInterval) {
+      clearInterval(scrollInterval);
+      scrollInterval = null;
+    }
+    return;
+  }
+
+  if (!scrollInterval) {
+    scrollInterval = setInterval(() => {
+      canvas.scrollLeft += dx;
+      canvas.scrollTop += dy;
+    }, 16);
+  }
+}
+
+function endDrag() {
+  clearDropIndicators();
+  hideHint();
+  document.body.classList.remove('is-dragging');
+  document.querySelectorAll('.is-being-dragged')
+    .forEach(el => el.classList.remove('is-being-dragged'));
+  dragState.draggedId = null;
+  dragState.dropTargetId = null;
+  dragState.dropMode = null;
+  if (scrollInterval) {
+    clearInterval(scrollInterval);
+    scrollInterval = null;
+  }
+}
+
+// Cancel drag on Escape (some browsers don't fire dragend reliably on Escape)
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && dragState.draggedId) {
+    endDrag();
+  }
 });
 
 // -------- Init --------
