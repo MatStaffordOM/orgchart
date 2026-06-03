@@ -112,42 +112,74 @@
     height: auto;
     display: block;
     object-fit: contain;
+    border-radius: 2px;
   }
 
-  .brand-remove-btn {
-    background: rgba(232, 92, 26, 0.9);
-    border: none;
-    color: var(--white);
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    margin-left: -10px;
-    margin-right: 6px;
-    align-self: center;
-    opacity: 0;
-    transition: opacity 0.15s ease, background 0.15s ease;
-  }
-
-  .brand-remove-btn svg {
-    width: 10px;
-    height: 10px;
-  }
-
-  .brand.has-logo .brand-remove-btn {
+  /* Placeholder shown until a logo is uploaded */
+  .brand-placeholder {
     display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px 7px 11px;
+    border: 1.5px dashed rgba(232, 92, 26, 0.5);
+    border-radius: 3px;
+    color: var(--mist);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1;
+    transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
   }
 
-  .brand.has-logo:hover .brand-remove-btn {
-    opacity: 1;
+  .brand-placeholder svg {
+    width: 13px;
+    height: 13px;
+    color: var(--orange-light);
+    flex-shrink: 0;
   }
 
-  .brand-remove-btn:hover {
-    background: var(--orange-core);
+  .brand:hover .brand-placeholder {
+    border-color: var(--orange-core);
+    background: rgba(232, 92, 26, 0.12);
+    color: var(--white);
+  }
+
+  /* Hover hint for an already-uploaded logo */
+  .brand.has-logo .brand-content {
+    position: relative;
+    padding: 2px;
+    border-radius: 3px;
+    transition: box-shadow 0.15s ease;
+  }
+
+  .brand.has-logo:hover .brand-content {
+    box-shadow: 0 0 0 1.5px rgba(232, 92, 26, 0.6);
+  }
+
+  /* Dropdown menu shown when clicking the logo */
+  .brand-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    background: var(--white);
+    border: 1px solid var(--fog);
+    border-radius: 4px;
+    box-shadow: 0 14px 36px -10px rgba(11, 31, 58, 0.32);
+    min-width: 200px;
+    padding: 4px;
+    z-index: 100;
+    display: none;
+    animation: menuIn 0.12s ease;
+  }
+
+  .brand-menu.is-open {
+    display: block;
+  }
+
+  .brand-menu .menu-item {
+    width: 100%;
   }
 
   .brand-mark {
@@ -1196,6 +1228,351 @@
     margin: 0 auto;
   }
 
+  /* ============ VACANCIES BUTTON ============ */
+  .btn-vacancies {
+    background: transparent;
+    color: var(--navy-mid);
+    border: 1px solid var(--fog);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 7px 11px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .btn-vacancies svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .btn-vacancies:hover {
+    background: var(--off-white);
+    border-color: var(--mist);
+    color: var(--navy-deep);
+  }
+
+  .btn-vacancies.has-vacancies {
+    color: #B83410;
+    border-color: rgba(184, 52, 16, 0.3);
+    background: rgba(184, 52, 16, 0.05);
+  }
+
+  .btn-vacancies.has-vacancies:hover {
+    background: rgba(184, 52, 16, 0.10);
+    border-color: rgba(184, 52, 16, 0.6);
+  }
+
+  .vacancies-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    background: var(--silver);
+    color: var(--white);
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0;
+    line-height: 1;
+  }
+
+  .btn-vacancies.has-vacancies .vacancies-count {
+    background: #B83410;
+  }
+
+  /* ============ SETTINGS BUTTON ============ */
+  .btn-icon-only {
+    background: transparent;
+    color: var(--navy-mid);
+    border: 1px solid var(--fog);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 9px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .btn-icon-only svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .btn-icon-only:hover {
+    background: var(--off-white);
+    border-color: var(--mist);
+    color: var(--orange-core);
+  }
+
+  /* ============ SETTINGS MODAL — TIER COLOURS ============ */
+  .settings-modal {
+    max-width: 540px;
+  }
+
+  .settings-help {
+    padding: 0 28px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: var(--silver);
+    line-height: 1.5;
+  }
+
+  .settings-help strong {
+    color: var(--navy-deep);
+  }
+
+  .setting-tier-grid {
+    padding: 0 28px 8px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 16px;
+  }
+
+  .setting-tier-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    background: var(--off-white);
+    border: 1px solid var(--fog);
+    border-radius: 3px;
+    transition: border-color 0.12s ease;
+  }
+
+  .setting-tier-row:hover {
+    border-color: var(--mist);
+  }
+
+  .setting-tier-label {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--navy-mid);
+    min-width: 56px;
+  }
+
+  .setting-tier-swatch {
+    width: 28px;
+    height: 28px;
+    border-radius: 3px;
+    border: 1.5px solid var(--white);
+    box-shadow: 0 0 0 1px var(--mist);
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: box-shadow 0.12s ease;
+  }
+
+  .setting-tier-swatch:hover {
+    box-shadow: 0 0 0 1.5px var(--orange-core);
+  }
+
+  .setting-tier-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .setting-tier-hex {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    color: var(--navy-deep);
+    letter-spacing: 0.04em;
+    flex: 1;
+    text-align: right;
+  }
+
+  .setting-tier-note {
+    margin: 8px 28px 0;
+    padding: 10px 14px;
+    background: rgba(232, 92, 26, 0.06);
+    border-left: 3px solid var(--orange-core);
+    border-radius: 0 3px 3px 0;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: var(--navy-deep);
+    line-height: 1.5;
+  }
+
+  /* ============ VACANCIES MODAL ============ */
+  .vacancies-modal {
+    max-width: 600px;
+  }
+
+  .vacancies-help {
+    padding: 0 28px 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: var(--silver);
+    line-height: 1.5;
+  }
+
+  .vacancies-list {
+    padding: 0 28px 20px;
+    max-height: 56vh;
+    overflow-y: auto;
+  }
+
+  .vacancy-item {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    background: var(--white);
+    border: 1px solid var(--fog);
+    border-radius: 3px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color 0.12s ease, box-shadow 0.12s ease, transform 0.12s ease;
+  }
+
+  .vacancy-item:hover {
+    border-color: var(--mist);
+    box-shadow: 0 4px 12px -6px rgba(11, 31, 58, 0.15);
+    transform: translateX(2px);
+  }
+
+  .vacancy-tier-stripe {
+    width: 6px;
+    flex-shrink: 0;
+  }
+
+  .vacancy-info {
+    flex: 1;
+    padding: 10px 14px;
+    min-width: 0;
+  }
+
+  .vacancy-role {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--navy-deep);
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+    word-wrap: break-word;
+  }
+
+  .vacancy-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    color: var(--silver);
+  }
+
+  .vacancy-meta strong {
+    color: var(--navy-mid);
+    font-weight: 700;
+  }
+
+  .vacancy-tier-pill {
+    display: inline-flex;
+    align-items: center;
+    color: var(--white);
+    font-weight: 700;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+    line-height: 1;
+  }
+
+  .vacancies-empty {
+    text-align: center;
+    padding: 28px 24px 20px;
+  }
+
+  .vacancies-empty-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: var(--silver);
+    line-height: 1.55;
+    max-width: 380px;
+    margin: 0 auto;
+  }
+
+  /* Briefly highlight a card after focusing from the vacancies modal */
+  .card.is-focused {
+    animation: focusPulse 1.8s ease;
+    z-index: 10;
+  }
+
+  @keyframes focusPulse {
+    0%, 100% {
+      box-shadow: 0 4px 12px -6px rgba(11, 31, 58, 0.18);
+    }
+    25%, 65% {
+      box-shadow:
+        0 0 0 3px rgba(232, 92, 26, 0.4),
+        0 10px 30px -6px rgba(232, 92, 26, 0.45);
+    }
+  }
+
+  /* ============ RTL SUPPORT (Persian / Arabic-script languages) ============ */
+  /* When the document is in RTL mode, the toolbar, header, modals and forms
+     all flow right-to-left. The chart canvas is FORCED LTR however —
+     org charts are inherently directional (parent on the left, children on
+     the right) and that convention is what users expect cross-locale. */
+
+  .canvas, .chart, .node, .children {
+    direction: ltr;
+  }
+
+  /* Persian uses Arabic-script characters that don't suit the Syne display
+     font — fall back to a system Persian/Arabic font where Syne would be used. */
+  .is-rtl .brand-title,
+  .is-rtl .modal-title,
+  .is-rtl .empty-title,
+  .is-rtl .card-name,
+  .is-rtl .stat-num,
+  .is-rtl .version-name,
+  .is-rtl .dept-headcount-num {
+    font-family: 'Vazirmatn', 'Tahoma', 'Iranian Sans', 'Segoe UI', system-ui, sans-serif;
+    letter-spacing: 0;
+  }
+
+  /* The "PFi" tier numbers on cards should still use Syne for the digits,
+     so reset that explicitly. Tier digits are ASCII Latin numerals. */
+  .is-rtl .card-tier {
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Dropdowns should pop down on the correct side under RTL */
+  .is-rtl .brand-menu {
+    inset-inline-start: auto;
+    inset-inline-end: 0;
+    left: auto;
+    right: 0;
+  }
+
+  .is-rtl .lang-dropdown {
+    inset-inline-start: 0;
+    inset-inline-end: auto;
+    left: 0;
+    right: auto;
+  }
+
+  /* Empty state and form helps still read naturally LTR for English UI
+     text/numbers — but in RTL we let the browser handle bidi automatically. */
+
   /* ============ DRAG & DROP ============ */
   .card[draggable="true"] {
     cursor: grab;
@@ -1368,6 +1745,24 @@
     z-index: 50;
     animation: menuIn 0.12s ease;
   }
+
+  /* When a card's ⋯ menu is open, lift the entire stacking context
+     above neighbouring cards so the dropdown isn't hidden by the next
+     position below it in the tree. Every container the card lives in
+     also needs raising — flex siblings establish their own stacking
+     based on z-index, and the .children container has gap-spaced
+     siblings that would otherwise paint over the dropdown.            */
+  .card.menu-open {
+    z-index: 200;
+  }
+  .card-wrap:has(.card.menu-open),
+  .node:has(.card.menu-open) {
+    z-index: 200;
+    position: relative;
+  }
+  /* Fallback for browsers without :has() support — direct ancestors
+     of an open menu won't always get raised, but the card itself still
+     pops via its own z-index, which catches most cases. */
 
   @keyframes menuIn {
     from { opacity: 0; transform: translateY(-4px); }
@@ -2009,11 +2404,12 @@
 <header class="app-header">
   <div class="brand" id="brand-area" title="Click to upload your own logo">
     <div class="brand-content" id="brand-content">
-      <div class="brand-mark">PF<span>i</span></div>
+      <div class="brand-placeholder">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 11V2M4 6l4-4 4 4"/><path d="M2 11v2.5h12V11"/></svg>
+        <span data-i18n="addLogo">Add Logo</span>
+      </div>
     </div>
-    <button class="brand-remove-btn" id="brand-remove-btn" data-action="reset-logo" title="Reset to PFi logo" style="display:none">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg>
-    </button>
+    <div class="brand-menu" id="brand-menu" role="menu"></div>
     <div class="brand-divider"></div>
     <div class="brand-title" data-i18n="appTitle">Organisation Chart</div>
   </div>
@@ -2060,6 +2456,11 @@
     <div class="toolbar-divider"></div>
     <button class="btn btn-ghost" data-action="expand-all"><span data-i18n="expandAll">Expand all</span></button>
     <button class="btn btn-ghost" data-action="collapse-all"><span data-i18n="collapseAll">Collapse all</span></button>
+    <button class="btn btn-vacancies" data-action="open-vacancies" id="vacancies-btn" title="Vacant positions">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5" r="2.5"/><path d="M3 14c0-3 2.5-5 5-5s5 2 5 5"/></svg>
+      <span data-i18n="vacancies">Vacancies</span>
+      <span class="vacancies-count" id="vacancies-count">0</span>
+    </button>
     <div class="toolbar-divider"></div>
     <button class="btn btn-outline" data-action="open-versions" title="Save / load named snapshots stored in your browser">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2.5h8l2 2v9H3z"/><path d="M5 2.5v4h6v-4M5 10h6"/></svg>
@@ -2080,6 +2481,9 @@
     <button class="btn btn-outline" data-action="reset">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8a6 6 0 1011-3"/><path d="M13.5 2v4h-4"/></svg>
       <span data-i18n="reset">Reset</span>
+    </button>
+    <button class="btn btn-icon-only" data-action="open-settings" title="Settings">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="2"/><path d="M8 1v2M8 13v2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M1 8h2M13 8h2M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41"/></svg>
     </button>
     <input type="file" id="file-input" accept="application/json,.json" style="display:none">
     <input type="file" id="logo-input" accept="image/*" style="display:none">
@@ -2110,14 +2514,15 @@ const LOGO_KEY = 'pfi_custom_logo';
 //   then overridable via the language switcher in the toolbar.
 // ============================================================
 const SUPPORTED_LANGUAGES = [
-  { code: 'en', label: 'English',     native: 'English' },
-  { code: 'es', label: 'Spanish',     native: 'Espa\u00f1ol' },
-  { code: 'fr', label: 'French',      native: 'Fran\u00e7ais' },
-  { code: 'de', label: 'German',      native: 'Deutsch' },
-  { code: 'pt', label: 'Portuguese',  native: 'Portugu\u00eas' },
-  { code: 'it', label: 'Italian',     native: 'Italiano' },
-  { code: 'zh', label: 'Chinese',     native: '\u4e2d\u6587' },
-  { code: 'ja', label: 'Japanese',    native: '\u65e5\u672c\u8a9e' }
+  { code: 'en', label: 'English',     native: 'English',              dir: 'ltr' },
+  { code: 'es', label: 'Spanish',     native: 'Espa\u00f1ol',          dir: 'ltr' },
+  { code: 'fr', label: 'French',      native: 'Fran\u00e7ais',         dir: 'ltr' },
+  { code: 'de', label: 'German',      native: 'Deutsch',              dir: 'ltr' },
+  { code: 'pt', label: 'Portuguese',  native: 'Portugu\u00eas',        dir: 'ltr' },
+  { code: 'it', label: 'Italian',     native: 'Italiano',             dir: 'ltr' },
+  { code: 'zh', label: 'Chinese',     native: '\u4e2d\u6587',          dir: 'ltr' },
+  { code: 'ja', label: 'Japanese',    native: '\u65e5\u672c\u8a9e',    dir: 'ltr' },
+  { code: 'fa', label: 'Persian',     native: '\u0641\u0627\u0631\u0633\u06cc', dir: 'rtl' }
 ];
 
 const TRANSLATIONS = {
@@ -2147,7 +2552,24 @@ const TRANSLATIONS = {
     emptyText: 'Add the top-level role to begin building your chart.',
     emptyAddRoot: 'Add root role', emptyLoadDefault: 'Load PFi default',
     selectLanguage: 'Language',
-    chooseLogo: 'Choose logo image'
+    chooseLogo: 'Choose logo image',
+    addLogo: 'Add Logo', changeLogo: 'Change logo', removeLogo: 'Remove logo',
+    settings: 'Settings',
+    settingsTitle: 'Customise tier colours',
+    settingsEyebrow: 'Settings \u00b7 Tier Colours',
+    settingsHelp: 'Each tier (level in the hierarchy) gets a colour used for card top borders, tier badges, and Excel export styling. Click a swatch to pick a new colour.',
+    settingsNote: 'Tiers 11 and beyond automatically use the Tier 10 colour.',
+    resetDefaults: 'Reset to defaults',
+    vacancies: 'Vacancies',
+    vacanciesTitle: 'Vacant Positions',
+    vacanciesCount: '{n} vacancies',
+    vacancyCountSingular: '1 vacancy',
+    vacanciesHelp: 'Positions sorted alphabetically by role title. Click a row to scroll to it in the chart.',
+    noVacancies: 'All positions filled',
+    noVacanciesText: 'You don\u2019t currently have any positions marked as vacant. To mark a role as vacant, edit it and set the name to \u201cPosition Vacant\u201d.',
+    reportsTo: 'Reports to',
+    topLevelLabel: 'top level',
+    close: 'Close'
   },
   es: {
     appTitle: 'Organigrama',
@@ -2175,7 +2597,24 @@ const TRANSLATIONS = {
     emptyText: 'A\u00f1ade el cargo de mayor nivel para empezar a construir tu organigrama.',
     emptyAddRoot: 'A\u00f1adir cargo ra\u00edz', emptyLoadDefault: 'Cargar PFi por defecto',
     selectLanguage: 'Idioma',
-    chooseLogo: 'Elegir imagen de logotipo'
+    chooseLogo: 'Elegir imagen de logotipo',
+    addLogo: 'A\u00f1adir logotipo', changeLogo: 'Cambiar logotipo', removeLogo: 'Eliminar logotipo',
+    settings: 'Ajustes',
+    settingsTitle: 'Personalizar colores de niveles',
+    settingsEyebrow: 'Ajustes \u00b7 Colores de niveles',
+    settingsHelp: 'Cada nivel (escal\u00f3n de la jerarqu\u00eda) tiene un color que se usa para los bordes superiores de las tarjetas, las insignias de nivel y el estilo de exportaci\u00f3n a Excel.',
+    settingsNote: 'Los niveles 11 y superiores usan autom\u00e1ticamente el color del Nivel 10.',
+    resetDefaults: 'Restablecer valores por defecto',
+    vacancies: 'Vacantes',
+    vacanciesTitle: 'Puestos Vacantes',
+    vacanciesCount: '{n} vacantes',
+    vacancyCountSingular: '1 vacante',
+    vacanciesHelp: 'Puestos ordenados alfab\u00e9ticamente por t\u00edtulo. Haz clic en una fila para desplazarte a ella en el organigrama.',
+    noVacancies: 'Todos los puestos cubiertos',
+    noVacanciesText: 'Actualmente no tienes puestos marcados como vacantes. Para marcar un cargo como vacante, ed\u00edtalo y pon el nombre como \u201cPosition Vacant\u201d.',
+    reportsTo: 'Reporta a',
+    topLevelLabel: 'nivel superior',
+    close: 'Cerrar'
   },
   fr: {
     appTitle: 'Organigramme',
@@ -2203,7 +2642,24 @@ const TRANSLATIONS = {
     emptyText: 'Ajoutez le poste de plus haut niveau pour construire votre organigramme.',
     emptyAddRoot: 'Ajouter un poste racine', emptyLoadDefault: 'Charger PFi par d\u00e9faut',
     selectLanguage: 'Langue',
-    chooseLogo: 'Choisir une image de logo'
+    chooseLogo: 'Choisir une image de logo',
+    addLogo: 'Ajouter un logo', changeLogo: 'Changer le logo', removeLogo: 'Supprimer le logo',
+    settings: 'Param\u00e8tres',
+    settingsTitle: 'Personnaliser les couleurs des niveaux',
+    settingsEyebrow: 'Param\u00e8tres \u00b7 Couleurs des niveaux',
+    settingsHelp: 'Chaque niveau (\u00e9chelon de la hi\u00e9rarchie) re\u00e7oit une couleur utilis\u00e9e pour les bordures sup\u00e9rieures des cartes, les badges de niveau et le style d\'export Excel.',
+    settingsNote: 'Les niveaux 11 et au-del\u00e0 utilisent automatiquement la couleur du Niveau 10.',
+    resetDefaults: 'R\u00e9initialiser les valeurs par d\u00e9faut',
+    vacancies: 'Postes vacants',
+    vacanciesTitle: 'Postes Vacants',
+    vacanciesCount: '{n} postes vacants',
+    vacancyCountSingular: '1 poste vacant',
+    vacanciesHelp: 'Postes class\u00e9s par ordre alphab\u00e9tique. Cliquez sur une ligne pour aller au poste dans l\'organigramme.',
+    noVacancies: 'Tous les postes pourvus',
+    noVacanciesText: 'Vous n\'avez actuellement aucun poste marqu\u00e9 comme vacant. Pour marquer un poste comme vacant, modifiez-le et d\u00e9finissez son nom sur \u00ab Position Vacant \u00bb.',
+    reportsTo: 'Rattach\u00e9 \u00e0',
+    topLevelLabel: 'niveau racine',
+    close: 'Fermer'
   },
   de: {
     appTitle: 'Organigramm',
@@ -2231,7 +2687,24 @@ const TRANSLATIONS = {
     emptyText: 'F\u00fcgen Sie die oberste Stelle hinzu, um Ihr Organigramm zu erstellen.',
     emptyAddRoot: 'Wurzelstelle hinzuf\u00fcgen', emptyLoadDefault: 'PFi-Standard laden',
     selectLanguage: 'Sprache',
-    chooseLogo: 'Logobild ausw\u00e4hlen'
+    chooseLogo: 'Logobild ausw\u00e4hlen',
+    addLogo: 'Logo hinzuf\u00fcgen', changeLogo: 'Logo \u00e4ndern', removeLogo: 'Logo entfernen',
+    settings: 'Einstellungen',
+    settingsTitle: 'Ebenenfarben anpassen',
+    settingsEyebrow: 'Einstellungen \u00b7 Ebenenfarben',
+    settingsHelp: 'Jede Ebene erh\u00e4lt eine Farbe f\u00fcr die obere Kartengrenze, das Ebenen-Badge und die Excel-Export-Formatierung.',
+    settingsNote: 'Ebenen 11 und h\u00f6her verwenden automatisch die Farbe von Ebene 10.',
+    resetDefaults: 'Auf Standard zur\u00fccksetzen',
+    vacancies: 'Vakanzen',
+    vacanciesTitle: 'Offene Stellen',
+    vacanciesCount: '{n} Vakanzen',
+    vacancyCountSingular: '1 Vakanz',
+    vacanciesHelp: 'Stellen alphabetisch nach Titel sortiert. Klicken Sie auf eine Zeile, um zu ihr im Organigramm zu scrollen.',
+    noVacancies: 'Alle Stellen besetzt',
+    noVacanciesText: 'Sie haben derzeit keine Stellen als vakant markiert. Um eine Stelle als vakant zu markieren, bearbeiten Sie sie und setzen Sie den Namen auf \u201ePosition Vacant\u201c.',
+    reportsTo: 'Berichtet an',
+    topLevelLabel: 'oberste Ebene',
+    close: 'Schlie\u00dfen'
   },
   pt: {
     appTitle: 'Organograma',
@@ -2259,7 +2732,24 @@ const TRANSLATIONS = {
     emptyText: 'Adicione o cargo de mais alto n\u00edvel para come\u00e7ar a construir seu organograma.',
     emptyAddRoot: 'Adicionar cargo raiz', emptyLoadDefault: 'Carregar padr\u00e3o PFi',
     selectLanguage: 'Idioma',
-    chooseLogo: 'Escolher imagem do logotipo'
+    chooseLogo: 'Escolher imagem do logotipo',
+    addLogo: 'Adicionar logotipo', changeLogo: 'Alterar logotipo', removeLogo: 'Remover logotipo',
+    settings: 'Configura\u00e7\u00f5es',
+    settingsTitle: 'Personalizar cores dos n\u00edveis',
+    settingsEyebrow: 'Configura\u00e7\u00f5es \u00b7 Cores dos n\u00edveis',
+    settingsHelp: 'Cada n\u00edvel da hierarquia recebe uma cor usada para as bordas superiores dos cart\u00f5es, as insignias de n\u00edvel e a formata\u00e7\u00e3o do Excel.',
+    settingsNote: 'N\u00edveis 11 e superiores usam automaticamente a cor do N\u00edvel 10.',
+    resetDefaults: 'Restaurar padr\u00f5es',
+    vacancies: 'Vagas',
+    vacanciesTitle: 'Vagas em Aberto',
+    vacanciesCount: '{n} vagas',
+    vacancyCountSingular: '1 vaga',
+    vacanciesHelp: 'Vagas ordenadas alfabeticamente pelo t\u00edtulo do cargo. Clique em uma linha para rolar at\u00e9 ela no organograma.',
+    noVacancies: 'Todos os cargos preenchidos',
+    noVacanciesText: 'Atualmente voc\u00ea n\u00e3o tem cargos marcados como vagos. Para marcar um cargo como vago, edite-o e defina o nome como \u201cPosition Vacant\u201d.',
+    reportsTo: 'Reporta a',
+    topLevelLabel: 'n\u00edvel superior',
+    close: 'Fechar'
   },
   it: {
     appTitle: 'Organigramma',
@@ -2287,7 +2777,24 @@ const TRANSLATIONS = {
     emptyText: 'Aggiungi il ruolo di livello pi\u00f9 alto per iniziare a costruire il tuo organigramma.',
     emptyAddRoot: 'Aggiungi ruolo radice', emptyLoadDefault: 'Carica predefinito PFi',
     selectLanguage: 'Lingua',
-    chooseLogo: 'Scegli immagine del logo'
+    chooseLogo: 'Scegli immagine del logo',
+    addLogo: 'Aggiungi logo', changeLogo: 'Cambia logo', removeLogo: 'Rimuovi logo',
+    settings: 'Impostazioni',
+    settingsTitle: 'Personalizza i colori dei livelli',
+    settingsEyebrow: 'Impostazioni \u00b7 Colori dei livelli',
+    settingsHelp: 'Ogni livello della gerarchia riceve un colore usato per i bordi superiori delle schede, i badge dei livelli e lo stile di esportazione Excel.',
+    settingsNote: 'I livelli 11 e oltre usano automaticamente il colore del Livello 10.',
+    resetDefaults: 'Ripristina valori predefiniti',
+    vacancies: 'Posizioni aperte',
+    vacanciesTitle: 'Posizioni Vacanti',
+    vacanciesCount: '{n} posizioni vacanti',
+    vacancyCountSingular: '1 posizione vacante',
+    vacanciesHelp: 'Posizioni ordinate alfabeticamente per titolo. Clicca su una riga per andare alla posizione nell\'organigramma.',
+    noVacancies: 'Tutte le posizioni occupate',
+    noVacanciesText: 'Al momento non hai posizioni contrassegnate come vacanti. Per contrassegnare un ruolo come vacante, modificalo e imposta il nome su \u201cPosition Vacant\u201d.',
+    reportsTo: 'Riporta a',
+    topLevelLabel: 'livello superiore',
+    close: 'Chiudi'
   },
   zh: {
     appTitle: '\u7ec4\u7ec7\u67b6\u6784\u56fe',
@@ -2315,7 +2822,24 @@ const TRANSLATIONS = {
     emptyText: '\u6dfb\u52a0\u6700\u9ad8\u7ea7\u804c\u4f4d\uff0c\u5f00\u59cb\u6784\u5efa\u60a8\u7684\u7ec4\u7ec7\u67b6\u6784\u56fe\u3002',
     emptyAddRoot: '\u6dfb\u52a0\u6839\u804c\u4f4d', emptyLoadDefault: '\u52a0\u8f7d PFi \u9ed8\u8ba4\u7ed3\u6784',
     selectLanguage: '\u8bed\u8a00',
-    chooseLogo: '\u9009\u62e9\u6807\u5fd7\u56fe\u7247'
+    chooseLogo: '\u9009\u62e9\u6807\u5fd7\u56fe\u7247',
+    addLogo: '\u6dfb\u52a0\u6807\u5fd7', changeLogo: '\u66f4\u6362\u6807\u5fd7', removeLogo: '\u79fb\u9664\u6807\u5fd7',
+    settings: '\u8bbe\u7f6e',
+    settingsTitle: '\u81ea\u5b9a\u4e49\u5c42\u7ea7\u989c\u8272',
+    settingsEyebrow: '\u8bbe\u7f6e \u00b7 \u5c42\u7ea7\u989c\u8272',
+    settingsHelp: '\u6bcf\u4e2a\u5c42\u7ea7\uff08\u5c42\u7ea7\u4f4d\u7f6e\uff09\u90fd\u6709\u4e00\u4e2a\u989c\u8272\uff0c\u7528\u4e8e\u5361\u7247\u9876\u90e8\u8fb9\u6846\u3001\u5c42\u7ea7\u5fbd\u7ae0\u548c Excel \u5bfc\u51fa\u6837\u5f0f\u3002',
+    settingsNote: '\u7b2c 11 \u5c42\u53ca\u4ee5\u4e0a\u81ea\u52a8\u4f7f\u7528\u7b2c 10 \u5c42\u7684\u989c\u8272\u3002',
+    resetDefaults: '\u91cd\u7f6e\u4e3a\u9ed8\u8ba4\u503c',
+    vacancies: '\u7a7a\u7f3a',
+    vacanciesTitle: '\u7a7a\u7f3a\u804c\u4f4d',
+    vacanciesCount: '{n} \u4e2a\u7a7a\u7f3a',
+    vacancyCountSingular: '1 \u4e2a\u7a7a\u7f3a',
+    vacanciesHelp: '\u804c\u4f4d\u6309\u540d\u79f0\u5b57\u6bcd\u987a\u5e8f\u6392\u5217\u3002\u5355\u51fb\u67d0\u884c\u53ef\u6eda\u52a8\u5230\u7ec4\u7ec7\u67b6\u6784\u56fe\u4e2d\u7684\u8be5\u804c\u4f4d\u3002',
+    noVacancies: '\u6240\u6709\u804c\u4f4d\u5df2\u586b\u6ee1',
+    noVacanciesText: '\u60a8\u5f53\u524d\u6ca1\u6709\u6807\u8bb0\u4e3a\u7a7a\u7f3a\u7684\u804c\u4f4d\u3002\u8981\u5c06\u804c\u4f4d\u6807\u8bb0\u4e3a\u7a7a\u7f3a\uff0c\u8bf7\u7f16\u8f91\u5b83\u5e76\u5c06\u540d\u79f0\u8bbe\u7f6e\u4e3a "Position Vacant"\u3002',
+    reportsTo: '\u6c47\u62a5\u7ed9',
+    topLevelLabel: '\u9876\u5c42',
+    close: '\u5173\u95ed'
   },
   ja: {
     appTitle: '\u7d44\u7e54\u56f3',
@@ -2343,7 +2867,69 @@ const TRANSLATIONS = {
     emptyText: '\u6700\u4e0a\u4f4d\u306e\u8077\u4f4d\u3092\u8ffd\u52a0\u3057\u3066\u3001\u7d44\u7e54\u56f3\u306e\u4f5c\u6210\u3092\u958b\u59cb\u3057\u307e\u3059\u3002',
     emptyAddRoot: '\u30eb\u30fc\u30c8\u8077\u4f4d\u3092\u8ffd\u52a0', emptyLoadDefault: 'PFi \u30c7\u30d5\u30a9\u30eb\u30c8\u3092\u8aad\u307f\u8fbc\u3080',
     selectLanguage: '\u8a00\u8a9e',
-    chooseLogo: '\u30ed\u30b4\u753b\u50cf\u3092\u9078\u629e'
+    chooseLogo: '\u30ed\u30b4\u753b\u50cf\u3092\u9078\u629e',
+    addLogo: '\u30ed\u30b4\u3092\u8ffd\u52a0', changeLogo: '\u30ed\u30b4\u3092\u5909\u66f4', removeLogo: '\u30ed\u30b4\u3092\u524a\u9664',
+    settings: '\u8a2d\u5b9a',
+    settingsTitle: '\u968e\u5c64\u30ab\u30e9\u30fc\u3092\u30ab\u30b9\u30bf\u30de\u30a4\u30ba',
+    settingsEyebrow: '\u8a2d\u5b9a \u00b7 \u968e\u5c64\u30ab\u30e9\u30fc',
+    settingsHelp: '\u5404\u968e\u5c64\u306b\u306f\u3001\u30ab\u30fc\u30c9\u306e\u4e0a\u90e8\u30dc\u30fc\u30c0\u30fc\u3001\u968e\u5c64\u30d0\u30c3\u30b8\u3001Excel \u30a8\u30af\u30b9\u30dd\u30fc\u30c8\u306e\u30b9\u30bf\u30a4\u30eb\u306b\u4f7f\u7528\u3055\u308c\u308b\u30ab\u30e9\u30fc\u304c\u5272\u308a\u5f53\u3066\u3089\u308c\u307e\u3059\u3002',
+    settingsNote: '\u968e\u5c64 11 \u4ee5\u964d\u306f\u81ea\u52d5\u7684\u306b\u968e\u5c64 10 \u306e\u30ab\u30e9\u30fc\u3092\u4f7f\u7528\u3057\u307e\u3059\u3002',
+    resetDefaults: '\u30c7\u30d5\u30a9\u30eb\u30c8\u306b\u30ea\u30bb\u30c3\u30c8',
+    vacancies: '\u7a7a\u5e2d',
+    vacanciesTitle: '\u7a7a\u5e2d\u30dd\u30b8\u30b7\u30e7\u30f3',
+    vacanciesCount: '{n} \u4ef6\u306e\u7a7a\u5e2d',
+    vacancyCountSingular: '1 \u4ef6\u306e\u7a7a\u5e2d',
+    vacanciesHelp: '\u30dd\u30b8\u30b7\u30e7\u30f3\u540d\u3067\u30a2\u30eb\u30d5\u30a1\u30d9\u30c3\u30c8\u9806\u306b\u4e26\u3079\u3089\u308c\u3066\u3044\u307e\u3059\u3002\u884c\u3092\u30af\u30ea\u30c3\u30af\u3059\u308b\u3068\u3001\u7d44\u7e54\u56f3\u5185\u306e\u305d\u306e\u30dd\u30b8\u30b7\u30e7\u30f3\u306b\u30b9\u30af\u30ed\u30fc\u30eb\u3057\u307e\u3059\u3002',
+    noVacancies: '\u3059\u3079\u3066\u306e\u30dd\u30b8\u30b7\u30e7\u30f3\u304c\u5145\u5857\u6e08\u307f',
+    noVacanciesText: '\u73fe\u5728\u3001\u7a7a\u5e2d\u3068\u3057\u3066\u30de\u30fc\u30af\u3055\u308c\u305f\u30dd\u30b8\u30b7\u30e7\u30f3\u306f\u3042\u308a\u307e\u305b\u3093\u3002\u30dd\u30b8\u30b7\u30e7\u30f3\u3092\u7a7a\u5e2d\u306b\u30de\u30fc\u30af\u3059\u308b\u306b\u306f\u3001\u305d\u308c\u3092\u7de8\u96c6\u3057\u3066\u540d\u524d\u3092\u300cPosition Vacant\u300d\u306b\u8a2d\u5b9a\u3057\u3066\u304f\u3060\u3055\u3044\u3002',
+    reportsTo: '\u5831\u544a\u5148',
+    topLevelLabel: '\u30c8\u30c3\u30d7\u30ec\u30d9\u30eb',
+    close: '\u9589\u3058\u308b'
+  },
+  fa: {
+    appTitle: '\u0646\u0645\u0648\u062f\u0627\u0631 \u0633\u0627\u0632\u0645\u0627\u0646\u06cc',
+    save: '\u0630\u062e\u06cc\u0631\u0647', excel: '\u0627\u06a9\u0633\u0644', export: '\u062e\u0631\u0648\u062c\u06cc', import: '\u0648\u0627\u0631\u062f \u06a9\u0631\u062f\u0646', reset: '\u0628\u0627\u0632\u0646\u0634\u0627\u0646\u06cc',
+    expandAll: '\u0628\u0627\u0632 \u06a9\u0631\u062f\u0646 \u0647\u0645\u0647', collapseAll: '\u062c\u0645\u0639 \u06a9\u0631\u062f\u0646 \u0647\u0645\u0647',
+    tierKey: '\u06a9\u0644\u06cc\u062f \u0633\u0637\u062d\u200c\u0647\u0627',
+    tiers: '\u0633\u0637\u062d\u200c\u0647\u0627', roles: '\u0646\u0642\u0634\u200c\u0647\u0627', headcount: '\u062a\u0639\u062f\u0627\u062f \u06a9\u0627\u0631\u06a9\u0646\u0627\u0646', depts: '\u0648\u0627\u062d\u062f\u0647\u0627', billable: '\u0642\u0627\u0628\u0644 \u0635\u0648\u0631\u062a\u200c\u062d\u0633\u0627\u0628',
+    savedLocally: '\u0630\u062e\u06cc\u0631\u0647 \u0634\u062f', saving: '\u062f\u0631 \u062d\u0627\u0644 \u0630\u062e\u06cc\u0631\u0647\u2026', saveFailed: '\u0630\u062e\u06cc\u0631\u0647 \u0646\u0627\u0645\u0648\u0641\u0642',
+    tier: '\u0633\u0637\u062d', dept: '\u0648\u0627\u062d\u062f', vacant: '\u062e\u0627\u0644\u06cc',
+    person: '\u0646\u0641\u0631', people: '\u0646\u0641\u0631',
+    clickAddName: '\u0628\u0631\u0627\u06cc \u0627\u0641\u0632\u0648\u062f\u0646 \u0646\u0627\u0645 \u06a9\u0644\u06cc\u06a9 \u06a9\u0646\u06cc\u062f', clickNameDept: '\u0628\u0631\u0627\u06cc \u0646\u0627\u0645\u200c\u06af\u0630\u0627\u0631\u06cc \u0648\u0627\u062d\u062f \u06a9\u0644\u06cc\u06a9 \u06a9\u0646\u06cc\u062f',
+    emptyRole: '\u2014 \u0646\u0642\u0634 \u2014',
+    editDetails: '\u0648\u06cc\u0631\u0627\u06cc\u0634 \u062c\u0632\u0626\u06cc\u0627\u062a', editDepartment: '\u0648\u06cc\u0631\u0627\u06cc\u0634 \u0648\u0627\u062d\u062f',
+    addDirectReport: '\u0627\u0641\u0632\u0648\u062f\u0646 \u0632\u06cc\u0631\u062f\u0633\u062a \u0645\u0633\u062a\u0642\u06cc\u0645', addRoleToDept: '\u0627\u0641\u0632\u0648\u062f\u0646 \u0646\u0642\u0634 \u0628\u0647 \u0648\u0627\u062d\u062f',
+    addDepartment: '\u0627\u0641\u0632\u0648\u062f\u0646 \u0648\u0627\u062d\u062f', addPeer: '\u0627\u0641\u0632\u0648\u062f\u0646 \u0647\u0645\u062a\u0627\u06cc \u0647\u0645\u200c\u0633\u0637\u062d',
+    deleteRole: '\u062d\u0630\u0641 \u0646\u0642\u0634', deleteDepartment: '\u062d\u0630\u0641 \u0648\u0627\u062d\u062f',
+    cancel: '\u0644\u063a\u0648', save_changes: '\u0630\u062e\u06cc\u0631\u0647 \u062a\u063a\u06cc\u06cc\u0631\u0627\u062a',
+    name: '\u0646\u0627\u0645', role: '\u0646\u0642\u0634 / \u0639\u0646\u0648\u0627\u0646', notes: '\u06cc\u0627\u062f\u062f\u0627\u0634\u062a\u200c\u0647\u0627', deptName: '\u0646\u0627\u0645 \u0648\u0627\u062d\u062f',
+    optional: '(\u0627\u062e\u062a\u06cc\u0627\u0631\u06cc)',
+    billableResource: '\u0645\u0646\u0628\u0639 \u0642\u0627\u0628\u0644 \u0635\u0648\u0631\u062a\u200c\u062d\u0633\u0627\u0628',
+    billableHelp: '\u0632\u0645\u0627\u0646 \u0628\u0647 \u0645\u0634\u062a\u0631\u06cc\u0627\u0646 \u06cc\u0627 \u067e\u0631\u0648\u0698\u0647\u200c\u0647\u0627 \u0642\u0627\u0628\u0644 \u0635\u0648\u0631\u062a\u200c\u062d\u0633\u0627\u0628 \u0627\u0633\u062a.',
+    chargeRate: '\u0646\u0631\u062e \u0633\u0627\u0639\u062a\u06cc', perHour: '/ \u0633\u0627\u0639\u062a',
+    createRole: '\u0627\u06cc\u062c\u0627\u062f \u0646\u0642\u0634', createDept: '\u0627\u06cc\u062c\u0627\u062f \u0648\u0627\u062d\u062f',
+    emptyTitle: '\u0628\u0627 \u06cc\u06a9 \u0646\u0642\u0634 \u0631\u06cc\u0634\u0647 \u0634\u0631\u0648\u0639 \u06a9\u0646\u06cc\u062f',
+    emptyText: '\u0628\u0627\u0644\u0627\u062a\u0631\u06cc\u0646 \u0646\u0642\u0634 \u0631\u0627 \u0627\u0636\u0627\u0641\u0647 \u06a9\u0646\u06cc\u062f \u062a\u0627 \u0633\u0627\u062e\u062a \u0646\u0645\u0648\u062f\u0627\u0631 \u0633\u0627\u0632\u0645\u0627\u0646\u06cc \u062e\u0648\u062f \u0631\u0627 \u0622\u063a\u0627\u0632 \u06a9\u0646\u06cc\u062f.',
+    emptyAddRoot: '\u0627\u0641\u0632\u0648\u062f\u0646 \u0646\u0642\u0634 \u0631\u06cc\u0634\u0647', emptyLoadDefault: '\u0628\u0627\u0631\u06af\u0630\u0627\u0631\u06cc \u067e\u06cc\u0634\u200c\u0641\u0631\u0636 PFi',
+    selectLanguage: '\u0632\u0628\u0627\u0646',
+    chooseLogo: '\u0627\u0646\u062a\u062e\u0627\u0628 \u062a\u0635\u0648\u06cc\u0631 \u0644\u0648\u06af\u0648',
+    addLogo: '\u0627\u0641\u0632\u0648\u062f\u0646 \u0644\u0648\u06af\u0648', changeLogo: '\u062a\u063a\u06cc\u06cc\u0631 \u0644\u0648\u06af\u0648', removeLogo: '\u062d\u0630\u0641 \u0644\u0648\u06af\u0648',
+    settings: '\u062a\u0646\u0638\u06cc\u0645\u0627\u062a',
+    settingsTitle: '\u0633\u0641\u0627\u0631\u0634\u06cc\u200c\u0633\u0627\u0632\u06cc \u0631\u0646\u06af\u200c\u0647\u0627\u06cc \u0633\u0637\u062d',
+    settingsEyebrow: '\u062a\u0646\u0638\u06cc\u0645\u0627\u062a \u00b7 \u0631\u0646\u06af\u200c\u0647\u0627\u06cc \u0633\u0637\u062d',
+    settingsHelp: '\u0647\u0631 \u0633\u0637\u062d (\u067e\u0644\u0647 \u062f\u0631 \u0633\u0644\u0633\u0644\u0647\u200c\u0645\u0631\u0627\u062a\u0628) \u06cc\u06a9 \u0631\u0646\u06af \u062f\u0631\u06cc\u0627\u0641\u062a \u0645\u06cc\u200c\u06a9\u0646\u062f \u06a9\u0647 \u0628\u0631\u0627\u06cc \u062d\u0627\u0634\u06cc\u0647 \u0628\u0627\u0644\u0627\u06cc\u06cc \u06a9\u0627\u0631\u062a\u200c\u0647\u0627\u060c \u0646\u0634\u0627\u0646\u200c\u0647\u0627\u06cc \u0633\u0637\u062d \u0648 \u0633\u0628\u06a9 \u062e\u0631\u0648\u062c\u06cc \u0627\u06a9\u0633\u0644 \u0627\u0633\u062a\u0641\u0627\u062f\u0647 \u0645\u06cc\u200c\u0634\u0648\u062f.',
+    settingsNote: '\u0633\u0637\u0648\u062d 11 \u0648 \u0628\u0627\u0644\u0627\u062a\u0631 \u0628\u0647 \u0635\u0648\u0631\u062a \u062e\u0648\u062f\u06a9\u0627\u0631 \u0627\u0632 \u0631\u0646\u06af \u0633\u0637\u062d 10 \u0627\u0633\u062a\u0641\u0627\u062f\u0647 \u0645\u06cc\u200c\u06a9\u0646\u0646\u062f.',
+    resetDefaults: '\u0628\u0627\u0632\u0646\u0634\u0627\u0646\u06cc \u0628\u0647 \u067e\u06cc\u0634\u200c\u0641\u0631\u0636',
+    vacancies: '\u067e\u0633\u062a\u200c\u0647\u0627\u06cc \u062e\u0627\u0644\u06cc',
+    vacanciesTitle: '\u067e\u0633\u062a\u200c\u0647\u0627\u06cc \u062e\u0627\u0644\u06cc',
+    vacanciesCount: '{n} \u067e\u0633\u062a \u062e\u0627\u0644\u06cc',
+    vacancyCountSingular: '1 \u067e\u0633\u062a \u062e\u0627\u0644\u06cc',
+    vacanciesHelp: '\u067e\u0633\u062a\u200c\u0647\u0627 \u0628\u0647 \u062a\u0631\u062a\u06cc\u0628 \u0627\u0644\u0641\u0628\u0627\u06cc\u06cc \u0639\u0646\u0648\u0627\u0646 \u0645\u0631\u062a\u0628 \u0634\u062f\u0647\u200c\u0627\u0646\u062f. \u0628\u0631\u0627\u06cc \u067e\u06cc\u0645\u0627\u06cc\u0634 \u0628\u0647 \u0622\u0646 \u062f\u0631 \u0646\u0645\u0648\u062f\u0627\u0631\u060c \u0631\u0648\u06cc \u06cc\u06a9 \u0631\u062f\u06cc\u0641 \u06a9\u0644\u06cc\u06a9 \u06a9\u0646\u06cc\u062f.',
+    noVacancies: '\u062a\u0645\u0627\u0645 \u067e\u0633\u062a\u200c\u0647\u0627 \u067e\u0631 \u0634\u062f\u0647',
+    noVacanciesText: '\u062f\u0631 \u062d\u0627\u0644 \u062d\u0627\u0636\u0631 \u0647\u06cc\u0686 \u067e\u0633\u062a\u06cc \u0628\u0647 \u0639\u0646\u0648\u0627\u0646 \u062e\u0627\u0644\u06cc \u0639\u0644\u0627\u0645\u062a\u200c\u06af\u0630\u0627\u0631\u06cc \u0646\u0634\u062f\u0647 \u0627\u0633\u062a. \u0628\u0631\u0627\u06cc \u0639\u0644\u0627\u0645\u062a\u200c\u06af\u0630\u0627\u0631\u06cc \u06cc\u06a9 \u0646\u0642\u0634 \u0628\u0647 \u0639\u0646\u0648\u0627\u0646 \u062e\u0627\u0644\u06cc\u060c \u0622\u0646 \u0631\u0627 \u0648\u06cc\u0631\u0627\u06cc\u0634 \u06a9\u0631\u062f\u0647 \u0648 \u0646\u0627\u0645 \u0631\u0627 \u0628\u0647 \u00abPosition Vacant\u00bb \u062a\u063a\u06cc\u06cc\u0631 \u062f\u0647\u06cc\u062f.',
+    reportsTo: '\u06af\u0632\u0627\u0631\u0634 \u0628\u0647',
+    topLevelLabel: '\u0628\u0627\u0644\u0627\u062a\u0631\u06cc\u0646 \u0633\u0637\u062d',
+    close: '\u0628\u0633\u062a\u0646'
   }
 };
 
@@ -2405,10 +2991,23 @@ function applyStaticTranslations() {
   if (langCurrent) langCurrent.textContent = currentLang.toUpperCase();
 }
 
+function applyDirection() {
+  // Set document direction (rtl for Persian/Arabic-like scripts, ltr otherwise).
+  // This makes the toolbar, header, modals, and form fields flow correctly.
+  // The chart canvas itself is forced LTR via CSS — org charts are inherently
+  // directional (parent → child) and that convention is preserved cross-locale.
+  const lang = SUPPORTED_LANGUAGES.find(l => l.code === currentLang);
+  const dir = (lang && lang.dir === 'rtl') ? 'rtl' : 'ltr';
+  document.documentElement.dir = dir;
+  document.documentElement.lang = currentLang;
+  document.body.classList.toggle('is-rtl', dir === 'rtl');
+}
+
 function switchLanguage(lang) {
   if (!TRANSLATIONS[lang]) return;
   currentLang = lang;
   try { localStorage.setItem(LANG_KEY, lang); } catch (_) {}
+  applyDirection();
   applyStaticTranslations();
   render();
   // Close dropdown
@@ -2433,18 +3032,41 @@ function renderLanguageDropdown() {
 function applyCustomLogo() {
   const content = document.getElementById('brand-content');
   const brand = document.getElementById('brand-area');
-  const removeBtn = document.getElementById('brand-remove-btn');
-  if (!content) return;
+  if (!content || !brand) return;
   const logo = localStorage.getItem(LOGO_KEY);
   if (logo) {
     content.innerHTML = `<img src="${escapeHtml(logo)}" class="brand-logo-img" alt="Logo">`;
-    brand?.classList.add('has-logo');
-    if (removeBtn) removeBtn.style.display = 'inline-flex';
+    brand.classList.add('has-logo');
   } else {
-    content.innerHTML = '<div class="brand-mark">PF<span>i</span></div>';
-    brand?.classList.remove('has-logo');
-    if (removeBtn) removeBtn.style.display = 'none';
+    content.innerHTML = `
+      <div class="brand-placeholder">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 11V2M4 6l4-4 4 4"/><path d="M2 11v2.5h12V11"/></svg>
+        <span>${t('addLogo')}</span>
+      </div>
+    `;
+    brand.classList.remove('has-logo');
   }
+  closeBrandMenu();
+}
+
+function openBrandMenu() {
+  const menu = document.getElementById('brand-menu');
+  if (!menu) return;
+  menu.innerHTML = `
+    <button class="menu-item" data-action="change-logo">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 11V2M4 6l4-4 4 4"/><path d="M2 11v2.5h12V11"/></svg>
+      ${t('changeLogo')}
+    </button>
+    <button class="menu-item danger" data-action="remove-logo">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h10M6 4V2.5h4V4M5 4l1 10h4l1-10"/></svg>
+      ${t('removeLogo')}
+    </button>
+  `;
+  menu.classList.add('is-open');
+}
+
+function closeBrandMenu() {
+  document.getElementById('brand-menu')?.classList.remove('is-open');
 }
 
 function uploadCustomLogo(file) {
@@ -2489,19 +3111,60 @@ const ICONS = {
   plus: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v10M3 8h10"/></svg>'
 };
 
-// -------- Tier colour assignment (style-guide compliant) --------
-// Top of hierarchy = warmest (orange). Deeper tiers = navy → silver.
-const TIER_COLORS = [
-  '#E85C1A', // Tier 1 — Orange Core
-  '#FF7535', // Tier 2 — Orange Light
-  '#1D3E6F', // Tier 3 — Navy Light
-  '#152E54', // Tier 4 — Navy Mid
-  '#0B1F3A', // Tier 5 — Deep Navy
-  '#8FA3B8'  // Tier 6+ — Silver
+// -------- Tier colour assignment (style-guide compliant, user-customisable) --------
+// Top of hierarchy = warmest (orange). Deeper tiers transition orange → navy → silver.
+// Users can customise tiers 1-10 individually via the Settings panel.
+// Tier 11 and beyond always inherit the tier 10 colour.
+const DEFAULT_TIER_COLORS = [
+  '#E85C1A', // Tier 1  — Orange Core
+  '#FF7535', // Tier 2  — Orange Light
+  '#1D3E6F', // Tier 3  — Navy Light
+  '#152E54', // Tier 4  — Navy Mid
+  '#0B1F3A', // Tier 5  — Deep Navy
+  '#3D5573', // Tier 6  — Navy → Silver transition
+  '#5A6E8C', // Tier 7
+  '#8FA3B8', // Tier 8  — Silver
+  '#A8B8C8', // Tier 9
+  '#C8D8E8'  // Tier 10 — Mist (used for all tiers >= 10)
 ];
 
+const TIER_COLORS_KEY = 'pfi_tier_colors';
+
+function getTierColors() {
+  try {
+    const raw = localStorage.getItem(TIER_COLORS_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length === DEFAULT_TIER_COLORS.length) {
+        // Validate each entry is a hex colour string
+        if (parsed.every(c => typeof c === 'string' && /^#[0-9a-fA-F]{6}$/.test(c))) {
+          return parsed;
+        }
+      }
+    }
+  } catch (_) { /* fall through to defaults */ }
+  return [...DEFAULT_TIER_COLORS];
+}
+
+function setTierColors(arr) {
+  try {
+    localStorage.setItem(TIER_COLORS_KEY, JSON.stringify(arr));
+    return true;
+  } catch (e) {
+    console.warn('Saving tier colours failed:', e);
+    return false;
+  }
+}
+
+function resetTierColors() {
+  try { localStorage.removeItem(TIER_COLORS_KEY); } catch (_) {}
+}
+
 function tierColor(tier) {
-  return TIER_COLORS[Math.min(tier - 1, TIER_COLORS.length - 1)];
+  const colors = getTierColors();
+  // Cap at tier 10 — tiers 11, 12, etc. inherit the tier 10 colour
+  const idx = Math.max(0, Math.min(tier - 1, colors.length - 1));
+  return colors[idx];
 }
 
 // -------- State --------
@@ -2832,6 +3495,7 @@ function render() {
   }
   updateHeaderStats();
   renderTierLegend();
+  updateVacanciesButton();
 }
 
 function renderEmptyState() {
@@ -2879,8 +3543,6 @@ function renderRoleCard(node, childCount, isCollapsed) {
   const color = tierColor(node.tier);
   const tierLabel = `${t('tier')} ${String(node.tier).padStart(2, '0')}`;
   const vacant = isVacant(node);
-  const billable = !!node.billable;
-  const rate = node.chargeRate;
   const effectiveCount = effectiveDirectReports(node.id);
   const totalCount = totalHeadcount(node.id);
   const bubbled = !vacant && (hasVacantDirectChild(node.id) || hasDepartmentDirectChild(node.id));
@@ -2897,11 +3559,10 @@ function renderRoleCard(node, childCount, isCollapsed) {
     : `<span class="br-direct">${effectiveCount}</span>`;
 
   return `
-    <div class="card ${isCollapsed ? 'is-collapsed' : ''} ${vacant ? 'is-vacant' : ''} ${billable ? 'is-billable' : ''}"
+    <div class="card ${isCollapsed ? 'is-collapsed' : ''} ${vacant ? 'is-vacant' : ''} ${openMenuId === node.id ? 'menu-open' : ''}"
          style="--tier-color: ${color}"
          data-id="${node.id}"
          draggable="${node.parentId ? 'true' : 'false'}">
-      ${billable ? `<span class="card-billable-marker" title="${t('billableResource')}">${t('billable')}</span>` : ''}
       <div class="card-header">
         <span class="card-tier">${tierLabel}${vacant ? ' \u00b7 <span class="tier-vacant">' + t('vacant') + '</span>' : ''}</span>
         <button class="card-menu-btn" data-action="toggle-menu" data-id="${node.id}" aria-label="Card actions">
@@ -2914,12 +3575,6 @@ function renderRoleCard(node, childCount, isCollapsed) {
       <div class="card-role" data-action="edit" data-id="${node.id}">
         ${escapeHtml(node.role) || '<span style="color:var(--silver)">' + t('emptyRole') + '</span>'}
       </div>
-      ${rate ? `
-        <div class="card-rate" title="${t('chargeRate')}">
-          <span>${formatCurrency(rate)}</span>
-          <span class="card-rate-unit">${t('perHour')}</span>
-        </div>
-      ` : ''}
       ${node.notes ? `
         <div class="card-notes" data-action="edit" data-id="${node.id}" title="Click to view / edit notes">
           ${ICONS.note}
@@ -2976,7 +3631,7 @@ function renderDepartmentCard(node, childCount, isCollapsed) {
   const directCount = effectiveDirectReports(node.id);
 
   return `
-    <div class="card is-department ${isCollapsed ? 'is-collapsed' : ''}"
+    <div class="card is-department ${isCollapsed ? 'is-collapsed' : ''} ${openMenuId === node.id ? 'menu-open' : ''}"
          style="--tier-color: ${color}"
          data-id="${node.id}"
          draggable="${node.parentId ? 'true' : 'false'}">
@@ -3041,14 +3696,9 @@ function updateHeaderStats() {
     deptStatGroup.style.display = depts > 0 ? 'flex' : 'none';
     deptStatNum.textContent = depts;
   }
-  // Billable filled roles
-  const billable = roles.filter(n => !isVacant(n) && n.billable).length;
-  const billStatNum = document.getElementById('stat-billable');
+  // Billable UI removed for now — keep the stat group hidden regardless of data
   const billStatGroup = document.getElementById('stat-group-billable');
-  if (billStatNum && billStatGroup) {
-    billStatGroup.style.display = billable > 0 ? 'flex' : 'none';
-    billStatNum.textContent = billable;
-  }
+  if (billStatGroup) billStatGroup.style.display = 'none';
 }
 
 function renderTierLegend() {
@@ -3100,24 +3750,6 @@ function openEditModal(id) {
         <div class="form-group">
           <label class="form-label" for="f-role">${t('role')}</label>
           <input class="form-input" id="f-role" type="text" placeholder="e.g. Operations Manager" value="${escapeHtml(node.role)}" autocomplete="off">
-        </div>
-        <div class="form-group">
-          <div class="form-toggle-row ${node.billable ? 'is-on' : ''}" id="billable-toggle-row" data-action="toggle-billable">
-            <label class="form-toggle-label" for="f-billable">
-              <span class="form-toggle-title">${t('billableResource')}</span>
-              <span class="form-toggle-sub">${t('billableHelp')}</span>
-            </label>
-            <input type="checkbox" id="f-billable" ${node.billable ? 'checked' : ''}>
-            <span class="form-toggle-switch"></span>
-          </div>
-          <div class="form-rate-row ${node.billable ? 'is-visible' : ''}" id="billable-rate-row">
-            <label class="form-label" for="f-rate" style="margin-top:10px">${t('chargeRate')} <span style="color:var(--silver); font-weight:500; text-transform:none; letter-spacing:0">${t('optional')}</span></label>
-            <div class="form-rate-input-wrap">
-              <span class="form-rate-currency">$</span>
-              <input class="form-input" id="f-rate" type="number" min="0" step="1" placeholder="120" value="${node.chargeRate || ''}" autocomplete="off">
-              <span class="form-rate-unit-suffix">${t('perHour')}</span>
-            </div>
-          </div>
         </div>
         <div class="form-group">
           <label class="form-label" for="f-notes">${t('notes')}</label>
@@ -3187,24 +3819,6 @@ function openAddModal({ parentId, type, nodeType }) {
         <div class="form-group">
           <label class="form-label" for="f-name">${t('name')} <span style="color:var(--silver); font-weight:500; text-transform:none; letter-spacing:0">${t('optional')}</span></label>
           <input class="form-input" id="f-name" type="text" placeholder="e.g. Jane Smith" autocomplete="off">
-        </div>
-        <div class="form-group">
-          <div class="form-toggle-row" id="billable-toggle-row" data-action="toggle-billable">
-            <label class="form-toggle-label" for="f-billable">
-              <span class="form-toggle-title">${t('billableResource')}</span>
-              <span class="form-toggle-sub">${t('billableHelp')}</span>
-            </label>
-            <input type="checkbox" id="f-billable">
-            <span class="form-toggle-switch"></span>
-          </div>
-          <div class="form-rate-row" id="billable-rate-row">
-            <label class="form-label" for="f-rate" style="margin-top:10px">${t('chargeRate')} <span style="color:var(--silver); font-weight:500; text-transform:none; letter-spacing:0">${t('optional')}</span></label>
-            <div class="form-rate-input-wrap">
-              <span class="form-rate-currency">$</span>
-              <input class="form-input" id="f-rate" type="number" min="0" step="1" placeholder="120" autocomplete="off">
-              <span class="form-rate-unit-suffix">${t('perHour')}</span>
-            </div>
-          </div>
         </div>
         <div class="form-group">
           <label class="form-label" for="f-notes">${t('notes')} <span style="color:var(--silver); font-weight:500; text-transform:none; letter-spacing:0">${t('optional')}</span></label>
@@ -3294,15 +3908,8 @@ function saveEditFromModal(id) {
   const name = (document.getElementById('f-name')?.value || '').trim();
   const role = isDept ? '' : (document.getElementById('f-role')?.value || '').trim();
   const notes = (document.getElementById('f-notes')?.value || '').trim();
-  const updates = { name, role, notes };
-  if (!isDept) {
-    const billableCb = document.getElementById('f-billable');
-    const rateInput = document.getElementById('f-rate');
-    updates.billable = !!(billableCb && billableCb.checked);
-    const rateVal = parseFloat(rateInput?.value);
-    updates.chargeRate = updates.billable && !isNaN(rateVal) && rateVal > 0 ? rateVal : null;
-  }
-  updateNode(id, updates);
+  // billable / chargeRate UI removed for now — existing values on the node are preserved.
+  updateNode(id, { name, role, notes });
   closeModal();
 }
 
@@ -3322,15 +3929,8 @@ function saveAddFromModal(parentId, nodeType) {
       return;
     }
   }
-  const opts = { parentId: parentId || null, name, role, notes, type: isDept ? 'department' : 'role' };
-  if (!isDept) {
-    const billableCb = document.getElementById('f-billable');
-    const rateInput = document.getElementById('f-rate');
-    opts.billable = !!(billableCb && billableCb.checked);
-    const rateVal = parseFloat(rateInput?.value);
-    opts.chargeRate = opts.billable && !isNaN(rateVal) && rateVal > 0 ? rateVal : null;
-  }
-  addNode(opts);
+  // billable / chargeRate UI removed for now — fields default to false / null in _createNode.
+  addNode({ parentId: parentId || null, name, role, notes, type: isDept ? 'department' : 'role' });
   closeModal();
 }
 
@@ -3590,6 +4190,206 @@ function handleConfirmDeleteVersion(versionId) {
       </div>
     </div>
   `;
+}
+
+// ============================================================
+//   SETTINGS — Tier Colour Customisation
+// ============================================================
+function openSettingsModal() {
+  renderSettingsModal();
+  modalOverlay.classList.add('is-open');
+}
+
+function renderSettingsModal() {
+  const colors = getTierColors();
+  const rows = colors.map((c, i) => `
+    <div class="setting-tier-row" data-tier-idx="${i}">
+      <span class="setting-tier-label">${t('tier')} ${String(i + 1).padStart(2, '0')}</span>
+      <label class="setting-tier-swatch" style="background:${c}" for="tier-color-${i}" title="Click to change colour">
+        <input type="color" class="setting-tier-input" id="tier-color-${i}" data-tier-idx="${i}" value="${c}">
+      </label>
+      <span class="setting-tier-hex">${c.toUpperCase()}</span>
+    </div>
+  `).join('');
+
+  modalOverlay.innerHTML = `
+    <div class="modal settings-modal">
+      <div class="modal-header">
+        <div class="modal-eyebrow">${t('settingsEyebrow')}</div>
+        <div class="modal-title">${t('settingsTitle')}</div>
+      </div>
+      <div class="modal-body">
+        <div class="settings-help">${t('settingsHelp')}</div>
+        <div class="setting-tier-grid">
+          ${rows}
+        </div>
+        <div class="setting-tier-note">${t('settingsNote')}</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" data-action="reset-tier-colors">${t('resetDefaults')}</button>
+        <div style="flex:1"></div>
+        <button class="btn btn-outline" data-action="close-modal">${t('cancel')}</button>
+        <button class="btn btn-primary" data-action="save-tier-colors">${t('save_changes')}</button>
+      </div>
+    </div>
+  `;
+
+  // Live preview within the modal as the user picks new colours
+  modalOverlay.querySelectorAll('.setting-tier-input').forEach(input => {
+    input.addEventListener('input', (e) => {
+      const row = e.target.closest('.setting-tier-row');
+      const newColor = e.target.value;
+      row.querySelector('.setting-tier-swatch').style.background = newColor;
+      row.querySelector('.setting-tier-hex').textContent = newColor.toUpperCase();
+    });
+  });
+}
+
+function saveTierColorsFromModal() {
+  const inputs = modalOverlay.querySelectorAll('.setting-tier-input');
+  const colors = new Array(DEFAULT_TIER_COLORS.length).fill('#000000');
+  inputs.forEach(inp => {
+    const idx = parseInt(inp.dataset.tierIdx, 10);
+    if (idx >= 0 && idx < colors.length) {
+      colors[idx] = inp.value;
+    }
+  });
+  if (setTierColors(colors)) {
+    render();
+    renderTierLegend();
+    closeModal();
+  } else {
+    alert('Could not save tier colours. Browser storage may be full.');
+  }
+}
+
+function resetTierColorsFromModal() {
+  resetTierColors();
+  // Re-render the settings modal so the swatches show the defaults
+  renderSettingsModal();
+}
+
+// ============================================================
+//   VACANCIES — Summary of Vacant Positions
+// ============================================================
+function getVacantPositions() {
+  return Object.values(state.nodes)
+    .filter(n => isVacant(n))
+    .map(n => ({
+      id: n.id,
+      role: (n.role || '').trim(),
+      tier: n.tier,
+      parent: n.parentId ? state.nodes[n.parentId] : null
+    }))
+    .sort((a, b) => {
+      // Alphabetical by role title (case-insensitive, locale-aware)
+      const ra = a.role || '\uffff'; // empty roles sort last
+      const rb = b.role || '\uffff';
+      return ra.localeCompare(rb, currentLang === 'en' ? 'en-AU' : currentLang, { sensitivity: 'base' });
+    });
+}
+
+function updateVacanciesButton() {
+  const btn = document.getElementById('vacancies-btn');
+  const countEl = document.getElementById('vacancies-count');
+  if (!btn || !countEl) return;
+  const count = Object.values(state.nodes).filter(n => isVacant(n)).length;
+  countEl.textContent = count;
+  btn.classList.toggle('has-vacancies', count > 0);
+}
+
+function openVacanciesModal() {
+  renderVacanciesModal();
+  modalOverlay.classList.add('is-open');
+}
+
+function renderVacanciesModal() {
+  const vacancies = getVacantPositions();
+
+  if (vacancies.length === 0) {
+    modalOverlay.innerHTML = `
+      <div class="modal vacancies-modal">
+        <div class="modal-header">
+          <div class="modal-eyebrow">${t('noVacancies')}</div>
+          <div class="modal-title">${t('vacanciesTitle')}</div>
+        </div>
+        <div class="modal-body">
+          <div class="vacancies-empty">
+            <div class="versions-empty-eyebrow">${t('noVacancies')}</div>
+            <div class="vacancies-empty-text">${t('noVacanciesText')}</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" data-action="close-modal">${t('close')}</button>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  const items = vacancies.map(v => {
+    const color = tierColor(v.tier);
+    const parentLabel = v.parent
+      ? escapeHtml(v.parent.role || v.parent.name || 'Untitled')
+      : `<em style="color:var(--silver); font-style:italic">${t('topLevelLabel')}</em>`;
+    const roleDisplay = v.role ? escapeHtml(v.role) : `<em style="color:var(--silver); font-style:italic">${t('emptyRole').replace(/\u2014/g, '').trim()}</em>`;
+    return `
+      <div class="vacancy-item" data-action="focus-node" data-id="${v.id}">
+        <div class="vacancy-tier-stripe" style="background:${color}"></div>
+        <div class="vacancy-info">
+          <div class="vacancy-role">${roleDisplay}</div>
+          <div class="vacancy-meta">
+            <span class="vacancy-tier-pill" style="background:${color}">${t('tier')} ${String(v.tier).padStart(2, '0')}</span>
+            <span>${t('reportsTo')} <strong>${parentLabel}</strong></span>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  const countText = vacancies.length === 1
+    ? t('vacancyCountSingular')
+    : t('vacanciesCount', { n: vacancies.length });
+
+  modalOverlay.innerHTML = `
+    <div class="modal vacancies-modal">
+      <div class="modal-header">
+        <div class="modal-eyebrow">${countText}</div>
+        <div class="modal-title">${t('vacanciesTitle')}</div>
+      </div>
+      <div class="modal-body">
+        <div class="vacancies-help">${t('vacanciesHelp')}</div>
+        <div class="vacancies-list">${items}</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-action="close-modal">${t('close')}</button>
+      </div>
+    </div>
+  `;
+}
+
+function focusNodeInChart(id) {
+  const node = state.nodes[id];
+  if (!node) return;
+  closeModal();
+  // Expand any collapsed ancestors so the target card is visible
+  let cur = node;
+  while (cur && cur.parentId) {
+    if (state.collapsed[cur.parentId]) {
+      state.collapsed[cur.parentId] = false;
+    }
+    cur = state.nodes[cur.parentId];
+  }
+  render();
+  // After re-render, scroll the card into view and pulse-highlight it
+  setTimeout(() => {
+    const cardEl = document.querySelector(`.card[data-id="${id}"]`);
+    if (cardEl) {
+      cardEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+      cardEl.classList.add('is-focused');
+      setTimeout(() => cardEl.classList.remove('is-focused'), 1800);
+    }
+  }, 60);
 }
 
 // ============================================================
@@ -4232,28 +5032,37 @@ document.addEventListener('click', (e) => {
       switchLanguage(actionEl.dataset.lang);
       break;
 
-    case 'reset-logo':
+    case 'change-logo':
       e.stopPropagation();
+      closeBrandMenu();
+      document.getElementById('logo-input').click();
+      break;
+
+    case 'remove-logo':
+      e.stopPropagation();
+      closeBrandMenu();
       resetCustomLogo();
       break;
 
-    case 'toggle-billable': {
-      // Click anywhere on the toggle row toggles the checkbox
-      if (e.target.closest('.form-toggle-label') && e.target.tagName === 'LABEL') {
-        // Allow native label behavior for keyboard accessibility
-        return;
-      }
-      e.preventDefault();
-      const cb = document.getElementById('f-billable');
-      const row = document.getElementById('billable-toggle-row');
-      const rateRow = document.getElementById('billable-rate-row');
-      if (!cb || !row || !rateRow) break;
-      cb.checked = !cb.checked;
-      row.classList.toggle('is-on', cb.checked);
-      rateRow.classList.toggle('is-visible', cb.checked);
-      if (cb.checked) setTimeout(() => document.getElementById('f-rate')?.focus(), 60);
+    case 'open-settings':
+      openSettingsModal();
       break;
-    }
+
+    case 'save-tier-colors':
+      saveTierColorsFromModal();
+      break;
+
+    case 'reset-tier-colors':
+      resetTierColorsFromModal();
+      break;
+
+    case 'open-vacancies':
+      openVacanciesModal();
+      break;
+
+    case 'focus-node':
+      focusNodeInChart(actionEl.dataset.id);
+      break;
 
     case 'seed-default':
       seedDefault();
@@ -4346,17 +5155,33 @@ document.getElementById('logo-input').addEventListener('change', (e) => {
   e.target.value = '';
 });
 
-// Brand area click opens logo file picker (unless clicking the remove button)
+// Brand area click: open menu if a logo is set, file picker if not
 document.getElementById('brand-area').addEventListener('click', (e) => {
-  if (e.target.closest('[data-action="reset-logo"]')) return;
-  document.getElementById('logo-input').click();
+  // Clicks inside the menu have their own data-action handlers — don't double-fire
+  if (e.target.closest('.brand-menu')) return;
+  const brand = document.getElementById('brand-area');
+  if (brand.classList.contains('has-logo')) {
+    const menu = document.getElementById('brand-menu');
+    if (menu.classList.contains('is-open')) {
+      closeBrandMenu();
+    } else {
+      e.stopPropagation();
+      openBrandMenu();
+    }
+  } else {
+    document.getElementById('logo-input').click();
+  }
 });
 
-// Outside-click closes the language dropdown
+// Outside-click closes both the lang dropdown and the brand menu
 document.addEventListener('click', (e) => {
-  if (e.target.closest('.lang-switcher')) return;
-  document.getElementById('lang-dropdown')?.classList.remove('is-open');
-  document.getElementById('lang-btn')?.classList.remove('is-open');
+  if (!e.target.closest('.lang-switcher')) {
+    document.getElementById('lang-dropdown')?.classList.remove('is-open');
+    document.getElementById('lang-btn')?.classList.remove('is-open');
+  }
+  if (!e.target.closest('#brand-area')) {
+    closeBrandMenu();
+  }
 });
 
 // ============================================================
@@ -4591,6 +5416,7 @@ document.addEventListener('keydown', (e) => {
 //    can override the auto-detection.
 // 4. applyCustomLogo() restores any previously-uploaded PNG/JPG/SVG logo.
 currentLang = detectLanguage();
+applyDirection();
 applyStaticTranslations();
 renderLanguageDropdown();
 applyCustomLogo();
