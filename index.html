@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js" defer></script>
 <style>
   :root {
     --navy-deep: #0B1F3A;
@@ -87,6 +88,66 @@
     display: flex;
     align-items: baseline;
     gap: 14px;
+    cursor: pointer;
+    padding: 0 8px;
+    margin: 0 -8px;
+    border-radius: 3px;
+    transition: background 0.15s ease;
+    position: relative;
+  }
+
+  .brand:hover {
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .brand-content {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .brand-content img.brand-logo-img {
+    max-height: 36px;
+    max-width: 180px;
+    width: auto;
+    height: auto;
+    display: block;
+    object-fit: contain;
+  }
+
+  .brand-remove-btn {
+    background: rgba(232, 92, 26, 0.9);
+    border: none;
+    color: var(--white);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin-left: -10px;
+    margin-right: 6px;
+    align-self: center;
+    opacity: 0;
+    transition: opacity 0.15s ease, background 0.15s ease;
+  }
+
+  .brand-remove-btn svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  .brand.has-logo .brand-remove-btn {
+    display: inline-flex;
+  }
+
+  .brand.has-logo:hover .brand-remove-btn {
+    opacity: 1;
+  }
+
+  .brand-remove-btn:hover {
+    background: var(--orange-core);
   }
 
   .brand-mark {
@@ -238,6 +299,97 @@
     display: flex;
     align-items: center;
     gap: 8px;
+  }
+
+  /* ============ LANGUAGE SWITCHER ============ */
+  .lang-switcher {
+    position: relative;
+  }
+
+  .lang-btn {
+    background: transparent;
+    color: var(--navy-mid);
+    border: 1px solid transparent;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  .lang-btn:hover {
+    background: var(--off-white);
+    color: var(--navy-deep);
+    border-color: var(--fog);
+  }
+
+  .lang-btn.is-open {
+    background: var(--off-white);
+    border-color: var(--mist);
+    color: var(--navy-deep);
+  }
+
+  .lang-btn svg:first-child {
+    width: 14px;
+    height: 14px;
+    color: var(--orange-core);
+  }
+
+  .lang-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    background: var(--white);
+    border: 1px solid var(--fog);
+    border-radius: 4px;
+    box-shadow: 0 14px 36px -10px rgba(11, 31, 58, 0.32);
+    min-width: 200px;
+    padding: 4px;
+    z-index: 100;
+    display: none;
+    animation: menuIn 0.12s ease;
+  }
+
+  .lang-dropdown.is-open {
+    display: block;
+  }
+
+  .lang-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background: transparent;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    color: var(--navy-deep);
+    padding: 8px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.1s ease;
+  }
+
+  .lang-item:hover {
+    background: var(--off-white);
+  }
+
+  .lang-item.is-active {
+    background: rgba(232, 92, 26, 0.08);
+    color: var(--orange-core);
+    font-weight: 700;
+  }
+
+  .lang-item-code {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--silver);
+    text-transform: uppercase;
+  }
+
+  .lang-item.is-active .lang-item-code {
+    color: var(--orange-core);
   }
 
   /* ============ BUTTONS ============ */
@@ -643,6 +795,405 @@
     color: var(--danger);
     font-weight: 700;
     letter-spacing: 0.14em;
+  }
+
+  /* ============ DEPARTMENT CARD ============ */
+  .card.is-department {
+    background: var(--navy-mid);
+    color: var(--mist);
+    border: 1px solid var(--navy-light);
+    border-top: 4px solid var(--tier-color, var(--orange-core));
+  }
+
+  .card.is-department:hover {
+    box-shadow: 0 10px 28px -8px rgba(11, 31, 58, 0.45);
+  }
+
+  .card.is-department .card-tier {
+    color: var(--mist);
+  }
+
+  .card.is-department .card-tier .dept-label {
+    color: var(--orange-light);
+    font-weight: 700;
+    margin-right: 4px;
+  }
+
+  .card.is-department .card-menu-btn {
+    color: var(--mist);
+  }
+
+  .card.is-department .card-menu-btn:hover {
+    background: var(--navy-light);
+    color: var(--white);
+  }
+
+  .card.is-department .card-name {
+    color: var(--white);
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    letter-spacing: -0.02em;
+  }
+
+  .card.is-department .card-name.is-empty {
+    color: var(--silver);
+    font-style: italic;
+  }
+
+  .card.is-department .card-role {
+    display: none;
+  }
+
+  .dept-headcount {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 10px;
+    padding: 5px 10px;
+    background: var(--orange-core);
+    color: var(--white);
+    border-radius: 3px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  .dept-headcount-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .dept-headcount-empty {
+    background: var(--silver);
+  }
+
+  .card.is-department .card-notes {
+    border-top-color: var(--navy-light);
+  }
+
+  .card.is-department .card-notes-text {
+    color: var(--mist);
+  }
+
+  .card.is-department .card-notes svg {
+    color: var(--orange-light);
+  }
+
+  /* Department cards don't show the role badge — they have the headcount tag instead */
+  .card.is-department .card-reports-badge {
+    display: none;
+  }
+
+  /* ============ BILLABLE INDICATOR ============ */
+  .card-billable-marker {
+    position: absolute;
+    top: -7px;
+    left: 14px;
+    background: #1B8556;
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    padding: 3px 7px 3px 6px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    line-height: 1;
+    box-shadow: 0 2px 5px -1px rgba(11, 31, 58, 0.3);
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .card-billable-marker::before {
+    content: '$';
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 10px;
+    letter-spacing: -0.02em;
+  }
+
+  .card-rate {
+    margin-top: 6px;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+    padding: 3px 7px;
+    background: rgba(27, 133, 86, 0.10);
+    color: #1B8556;
+    border-radius: 2px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: -0.01em;
+    line-height: 1;
+  }
+
+  .card-rate-unit {
+    font-weight: 500;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+
+  /* ============ FORM TOGGLE (billable, etc.) ============ */
+  .form-toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    background: var(--off-white);
+    border: 1.5px solid var(--fog);
+    border-radius: 4px;
+    transition: all 0.15s ease;
+  }
+
+  .form-toggle-row.is-on {
+    background: rgba(27, 133, 86, 0.06);
+    border-color: rgba(27, 133, 86, 0.3);
+  }
+
+  .form-toggle-label {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .form-toggle-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--navy-deep);
+  }
+
+  .form-toggle-sub {
+    font-size: 11px;
+    color: var(--silver);
+    line-height: 1.4;
+  }
+
+  .form-toggle-switch {
+    position: relative;
+    width: 38px;
+    height: 22px;
+    background: var(--mist);
+    border-radius: 11px;
+    cursor: pointer;
+    transition: background 0.18s ease;
+    flex-shrink: 0;
+  }
+
+  .form-toggle-switch::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    background: var(--white);
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    transition: transform 0.18s ease;
+  }
+
+  .form-toggle-row.is-on .form-toggle-switch {
+    background: #1B8556;
+  }
+
+  .form-toggle-row.is-on .form-toggle-switch::after {
+    transform: translateX(16px);
+  }
+
+  .form-toggle-row input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .form-rate-row {
+    margin-top: 10px;
+    display: none;
+  }
+
+  .form-rate-row.is-visible {
+    display: block;
+  }
+
+  .form-rate-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .form-rate-currency {
+    position: absolute;
+    left: 12px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    color: var(--silver);
+    font-size: 14px;
+    pointer-events: none;
+  }
+
+  .form-rate-input-wrap .form-input {
+    padding-left: 28px;
+    padding-right: 60px;
+  }
+
+  .form-rate-unit-suffix {
+    position: absolute;
+    right: 12px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--silver);
+    pointer-events: none;
+  }
+
+  /* ============ VERSIONS MODAL ============ */
+  .versions-modal {
+    max-width: 620px;
+  }
+
+  .versions-modal .modal-body {
+    padding: 0;
+  }
+
+  .versions-save {
+    padding: 18px 28px;
+    background: var(--off-white);
+    border-bottom: 1px solid var(--fog);
+  }
+
+  .versions-save-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  .versions-save-row .form-input {
+    flex: 1;
+    background: var(--white);
+  }
+
+  .versions-section-eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--silver);
+    padding: 16px 28px 8px;
+  }
+
+  .versions-list {
+    padding: 0 28px 20px;
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+
+  .version-item {
+    border: 1px solid var(--fog);
+    border-left: 3px solid var(--orange-core);
+    border-radius: 3px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: border-color 0.12s ease, box-shadow 0.12s ease;
+    background: var(--white);
+  }
+
+  .version-item:hover {
+    border-color: var(--mist);
+    border-left-color: var(--orange-core);
+    box-shadow: 0 4px 12px -6px rgba(11, 31, 58, 0.15);
+  }
+
+  .version-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .version-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--navy-deep);
+    letter-spacing: -0.01em;
+    margin-bottom: 3px;
+    word-wrap: break-word;
+  }
+
+  .version-meta {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    color: var(--silver);
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .version-meta strong {
+    color: var(--navy-mid);
+    font-weight: 700;
+  }
+
+  .version-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .btn-sm {
+    font-size: 11px;
+    padding: 7px 11px;
+  }
+
+  .btn-sm svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .versions-empty {
+    text-align: center;
+    padding: 32px 20px 12px;
+  }
+
+  .versions-empty-eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--silver);
+    margin-bottom: 8px;
+  }
+
+  .versions-empty-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: var(--silver);
+    line-height: 1.55;
+    max-width: 380px;
+    margin: 0 auto;
   }
 
   /* ============ DRAG & DROP ============ */
@@ -1065,6 +1616,354 @@
     max-width: 440px;
   }
 
+  /* ============ EXPORT PREVIEW MODAL ============ */
+  .export-preview-modal {
+    max-width: 1080px;
+    width: 96vw;
+    max-height: 92vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .export-preview-modal .modal-body {
+    padding: 0;
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .export-tabs {
+    display: flex;
+    gap: 0;
+    padding: 0 28px;
+    background: var(--white);
+    border-bottom: 1px solid var(--fog);
+    flex-shrink: 0;
+  }
+
+  .export-tab {
+    background: transparent;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--silver);
+    padding: 14px 18px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.12s ease;
+  }
+
+  .export-tab.is-active {
+    color: var(--navy-deep);
+    border-bottom-color: var(--orange-core);
+  }
+
+  .export-tab:hover:not(.is-active) {
+    color: var(--navy-mid);
+  }
+
+  .export-summary {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 12px 28px;
+    background: var(--off-white);
+    border-bottom: 1px solid var(--fog);
+    flex-shrink: 0;
+  }
+
+  .export-summary-item {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .export-summary-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    color: var(--navy-deep);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .export-summary-label {
+    font-weight: 600;
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--silver);
+  }
+
+  .export-preview-body {
+    flex: 1;
+    overflow: auto;
+    background: var(--off-white);
+    padding: 0;
+    min-height: 200px;
+  }
+
+  /* Org chart sheet preview — indented columnar layout */
+  .preview-orgchart {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-family: 'Inter', sans-serif;
+    background: var(--white);
+  }
+
+  .preview-orgchart thead th {
+    position: sticky;
+    top: 0;
+    background: var(--navy-deep);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 12px 14px;
+    text-align: left;
+    border-right: 1px solid var(--navy-mid);
+    z-index: 2;
+    min-width: 200px;
+    white-space: nowrap;
+  }
+
+  .preview-orgchart thead th:last-child {
+    border-right: none;
+  }
+
+  .preview-orgchart thead th .tier-stripe {
+    display: block;
+    height: 3px;
+    border-radius: 1.5px;
+    margin-top: 4px;
+  }
+
+  .preview-orgchart tbody td {
+    padding: 0;
+    border-right: 1px solid var(--fog);
+    border-bottom: 1px solid var(--fog);
+    vertical-align: top;
+    background: var(--white);
+    min-width: 200px;
+  }
+
+  .preview-orgchart tbody td:last-child {
+    border-right: none;
+  }
+
+  .preview-orgchart tbody td.empty {
+    background: var(--off-white);
+    background-image: linear-gradient(45deg, transparent 48%, var(--fog) 48%, var(--fog) 52%, transparent 52%);
+    background-size: 8px 8px;
+    opacity: 0.4;
+  }
+
+  .preview-orgchart .filled-cell {
+    padding: 10px 14px;
+    border-left: 4px solid var(--cell-tier-color, var(--orange-core));
+  }
+
+  .preview-orgchart .cell-role {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--navy-deep);
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+  }
+
+  .preview-orgchart .cell-name {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 11.5px;
+    color: var(--navy-mid);
+    margin-top: 2px;
+  }
+
+  .preview-orgchart .cell-meta {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 9.5px;
+    letter-spacing: 0.08em;
+    color: var(--silver);
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .preview-orgchart .filled-cell.is-vacant {
+    background:
+      repeating-linear-gradient(
+        135deg,
+        var(--white) 0,
+        var(--white) 8px,
+        var(--off-white) 8px,
+        var(--off-white) 10px
+      );
+  }
+
+  .preview-orgchart .filled-cell.is-department {
+    background: var(--navy-mid) !important;
+    border-left-color: var(--cell-tier-color, var(--orange-core));
+  }
+
+  .preview-orgchart .filled-cell.is-department .cell-role,
+  .preview-orgchart .filled-cell.is-department .cell-name {
+    color: var(--white);
+  }
+
+  .preview-orgchart .filled-cell.is-department .cell-dept-label {
+    color: var(--orange-light);
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+    display: block;
+  }
+
+  .preview-orgchart .filled-cell.is-department .cell-meta {
+    color: var(--orange-light);
+  }
+
+  .preview-orgchart .filled-cell.is-vacant .cell-role {
+    color: var(--silver);
+    font-style: italic;
+  }
+
+  .preview-orgchart .filled-cell.is-vacant .cell-name {
+    color: var(--danger);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 9.5px;
+  }
+
+  /* Directory sheet preview — flat tabular layout */
+  .preview-directory {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    background: var(--white);
+  }
+
+  .preview-directory thead th {
+    position: sticky;
+    top: 0;
+    background: var(--navy-deep);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 12px 14px;
+    text-align: left;
+    z-index: 2;
+    white-space: nowrap;
+  }
+
+  .preview-directory tbody td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--fog);
+    vertical-align: top;
+    color: var(--navy-deep);
+    line-height: 1.45;
+  }
+
+  .preview-directory tbody tr:nth-child(even) td {
+    background: var(--off-white);
+  }
+
+  .preview-directory .dir-tier {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--white);
+    text-align: center;
+    padding: 6px 8px !important;
+    min-width: 76px;
+    background: var(--cell-tier-color, var(--navy-mid)) !important;
+  }
+
+  .preview-directory .dir-role {
+    font-weight: 600;
+    color: var(--navy-deep);
+  }
+
+  .preview-directory .dir-name {
+    color: var(--navy-mid);
+  }
+
+  .preview-directory .dir-vacant {
+    color: var(--danger);
+    font-style: italic;
+    font-weight: 600;
+  }
+
+  .preview-directory .dir-empty {
+    color: var(--silver);
+  }
+
+  .preview-directory .dir-status {
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .preview-directory .dir-status.is-vacant {
+    color: var(--danger);
+  }
+
+  .preview-directory .dir-status.is-filled {
+    color: #1B8556;
+  }
+
+  .preview-directory .dir-status.is-unnamed {
+    color: var(--silver);
+  }
+
+  .preview-directory .dir-status.is-department {
+    color: var(--orange-core);
+  }
+
+  .preview-directory .dir-notes {
+    color: var(--silver);
+    font-size: 11px;
+    max-width: 280px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .export-meta {
+    margin-right: auto;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    color: var(--silver);
+    align-self: center;
+  }
+
+  .export-meta strong {
+    color: var(--navy-deep);
+    font-weight: 700;
+  }
+
   .confirm-modal .modal-body {
     padding: 4px 28px 22px;
   }
@@ -1108,51 +2007,82 @@
 <body>
 
 <header class="app-header">
-  <div class="brand">
-    <div class="brand-mark">PF<span>i</span></div>
+  <div class="brand" id="brand-area" title="Click to upload your own logo">
+    <div class="brand-content" id="brand-content">
+      <div class="brand-mark">PF<span>i</span></div>
+    </div>
+    <button class="brand-remove-btn" id="brand-remove-btn" data-action="reset-logo" title="Reset to PFi logo" style="display:none">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+    </button>
     <div class="brand-divider"></div>
-    <div class="brand-title">Organisation Chart</div>
+    <div class="brand-title" data-i18n="appTitle">Organisation Chart</div>
   </div>
   <div class="header-meta">
     <div class="stat-group">
       <span class="stat-num" id="stat-tiers">0</span>
-      <span class="stat-label">Tiers</span>
+      <span class="stat-label" data-i18n="tiers">Tiers</span>
     </div>
     <div class="stat-group">
       <span class="stat-num" id="stat-roles">0</span>
-      <span class="stat-label">Roles</span>
+      <span class="stat-label" data-i18n="roles">Roles</span>
     </div>
     <div class="stat-group">
       <span class="stat-num" id="stat-headcount">0</span>
-      <span class="stat-label">Headcount</span>
+      <span class="stat-label" data-i18n="headcount">Headcount</span>
+    </div>
+    <div class="stat-group" id="stat-group-billable" style="display:none">
+      <span class="stat-num" id="stat-billable" style="color:#3CC68A">0</span>
+      <span class="stat-label" data-i18n="billable">Billable</span>
+    </div>
+    <div class="stat-group" id="stat-group-departments" style="display:none">
+      <span class="stat-num" id="stat-departments">0</span>
+      <span class="stat-label" data-i18n="depts">Depts</span>
     </div>
     <div class="save-status" id="save-status">
       <span class="dot"></span>
-      <span class="save-text">Saved locally</span>
+      <span class="save-text" data-i18n="savedLocally">Saved locally</span>
     </div>
   </div>
 </header>
 
 <div class="toolbar">
-  <span class="toolbar-eyebrow">Tier Key</span>
+  <span class="toolbar-eyebrow" data-i18n="tierKey">Tier Key</span>
   <div class="tier-legend" id="tier-legend"></div>
   <div class="toolbar-right">
-    <button class="btn btn-ghost" data-action="expand-all">Expand all</button>
-    <button class="btn btn-ghost" data-action="collapse-all">Collapse all</button>
+    <div class="lang-switcher">
+      <button class="btn btn-ghost lang-btn" data-action="toggle-lang-menu" id="lang-btn" title="Switch language">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><path d="M2 8h12"/><path d="M8 2c1.8 1.8 2.8 3.8 2.8 6s-1 4.2-2.8 6c-1.8-1.8-2.8-3.8-2.8-6s1-4.2 2.8-6z"/></svg>
+        <span id="lang-current">EN</span>
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:-2px;width:10px;height:10px"><path d="M4 6l4 4 4-4"/></svg>
+      </button>
+      <div class="lang-dropdown" id="lang-dropdown"></div>
+    </div>
     <div class="toolbar-divider"></div>
-    <button class="btn btn-outline" data-action="export">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 7l4 4 4-4M2 13.5h12"/></svg>
-      Export
+    <button class="btn btn-ghost" data-action="expand-all"><span data-i18n="expandAll">Expand all</span></button>
+    <button class="btn btn-ghost" data-action="collapse-all"><span data-i18n="collapseAll">Collapse all</span></button>
+    <div class="toolbar-divider"></div>
+    <button class="btn btn-outline" data-action="open-versions" title="Save / load named snapshots stored in your browser">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2.5h8l2 2v9H3z"/><path d="M5 2.5v4h6v-4M5 10h6"/></svg>
+      <span data-i18n="save">Save</span>
     </button>
-    <button class="btn btn-outline" data-action="import">
+    <button class="btn btn-outline-orange" data-action="export-excel">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="11" height="11" rx="0.5"/><path d="M2.5 6.5h11M2.5 10.5h11M6.5 2.5v11M10.5 2.5v11"/></svg>
+      <span data-i18n="excel">Excel</span>
+    </button>
+    <button class="btn btn-outline" data-action="export" title="Backup chart data as JSON">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 7l4 4 4-4M2 13.5h12"/></svg>
+      <span data-i18n="export">Export</span>
+    </button>
+    <button class="btn btn-outline" data-action="import" title="Restore a previously exported JSON">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 11V2M4 6l4-4 4 4M2 13.5h12"/></svg>
-      Import
+      <span data-i18n="import">Import</span>
     </button>
     <button class="btn btn-outline" data-action="reset">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8a6 6 0 1011-3"/><path d="M13.5 2v4h-4"/></svg>
-      Reset
+      <span data-i18n="reset">Reset</span>
     </button>
     <input type="file" id="file-input" accept="application/json,.json" style="display:none">
+    <input type="file" id="logo-input" accept="image/*" style="display:none">
   </div>
 </div>
 
@@ -1171,6 +2101,380 @@
 // ============================================================
 
 const STORAGE_KEY = 'pfi_org_chart_v1';
+const LANG_KEY = 'pfi_lang';
+const LOGO_KEY = 'pfi_custom_logo';
+
+// ============================================================
+//   INTERNATIONALISATION (i18n)
+//   Auto-detected from navigator.language on first load,
+//   then overridable via the language switcher in the toolbar.
+// ============================================================
+const SUPPORTED_LANGUAGES = [
+  { code: 'en', label: 'English',     native: 'English' },
+  { code: 'es', label: 'Spanish',     native: 'Espa\u00f1ol' },
+  { code: 'fr', label: 'French',      native: 'Fran\u00e7ais' },
+  { code: 'de', label: 'German',      native: 'Deutsch' },
+  { code: 'pt', label: 'Portuguese',  native: 'Portugu\u00eas' },
+  { code: 'it', label: 'Italian',     native: 'Italiano' },
+  { code: 'zh', label: 'Chinese',     native: '\u4e2d\u6587' },
+  { code: 'ja', label: 'Japanese',    native: '\u65e5\u672c\u8a9e' }
+];
+
+const TRANSLATIONS = {
+  en: {
+    appTitle: 'Organisation Chart',
+    save: 'Save', excel: 'Excel', export: 'Export', import: 'Import', reset: 'Reset',
+    expandAll: 'Expand all', collapseAll: 'Collapse all',
+    tierKey: 'Tier Key',
+    tiers: 'Tiers', roles: 'Roles', headcount: 'Headcount', depts: 'Depts', billable: 'Billable',
+    savedLocally: 'Saved locally', saving: 'Saving\u2026', saveFailed: 'Save failed',
+    tier: 'Tier', dept: 'Dept', vacant: 'Vacant',
+    person: 'Person', people: 'People',
+    clickAddName: 'Click to add name', clickNameDept: 'Click to name department',
+    emptyRole: '\u2014 role \u2014',
+    editDetails: 'Edit details', editDepartment: 'Edit department',
+    addDirectReport: 'Add direct report', addRoleToDept: 'Add role to department',
+    addDepartment: 'Add department', addPeer: 'Add peer at same tier',
+    deleteRole: 'Delete role', deleteDepartment: 'Delete department',
+    cancel: 'Cancel', save_changes: 'Save changes',
+    name: 'Name', role: 'Role / Title', notes: 'Notes', deptName: 'Department Name',
+    optional: '(optional)',
+    billableResource: 'Billable resource',
+    billableHelp: 'Time is chargeable to clients or projects.',
+    chargeRate: 'Charge-out rate', perHour: '/ hr',
+    createRole: 'Create role', createDept: 'Create department',
+    emptyTitle: 'Start with a root role',
+    emptyText: 'Add the top-level role to begin building your chart.',
+    emptyAddRoot: 'Add root role', emptyLoadDefault: 'Load PFi default',
+    selectLanguage: 'Language',
+    chooseLogo: 'Choose logo image'
+  },
+  es: {
+    appTitle: 'Organigrama',
+    save: 'Guardar', excel: 'Excel', export: 'Exportar', import: 'Importar', reset: 'Restablecer',
+    expandAll: 'Expandir todo', collapseAll: 'Contraer todo',
+    tierKey: 'Niveles',
+    tiers: 'Niveles', roles: 'Cargos', headcount: 'Plantilla', depts: 'Deptos', billable: 'Facturable',
+    savedLocally: 'Guardado', saving: 'Guardando\u2026', saveFailed: 'Error al guardar',
+    tier: 'Nivel', dept: 'Depto', vacant: 'Vacante',
+    person: 'Persona', people: 'Personas',
+    clickAddName: 'A\u00f1adir nombre', clickNameDept: 'Nombrar departamento',
+    emptyRole: '\u2014 cargo \u2014',
+    editDetails: 'Editar detalles', editDepartment: 'Editar departamento',
+    addDirectReport: 'A\u00f1adir subordinado', addRoleToDept: 'A\u00f1adir cargo al departamento',
+    addDepartment: 'A\u00f1adir departamento', addPeer: 'A\u00f1adir colega del mismo nivel',
+    deleteRole: 'Eliminar cargo', deleteDepartment: 'Eliminar departamento',
+    cancel: 'Cancelar', save_changes: 'Guardar cambios',
+    name: 'Nombre', role: 'Cargo / T\u00edtulo', notes: 'Notas', deptName: 'Nombre del departamento',
+    optional: '(opcional)',
+    billableResource: 'Recurso facturable',
+    billableHelp: 'El tiempo se factura a clientes o proyectos.',
+    chargeRate: 'Tarifa por hora', perHour: '/ h',
+    createRole: 'Crear cargo', createDept: 'Crear departamento',
+    emptyTitle: 'Comienza con un cargo ra\u00edz',
+    emptyText: 'A\u00f1ade el cargo de mayor nivel para empezar a construir tu organigrama.',
+    emptyAddRoot: 'A\u00f1adir cargo ra\u00edz', emptyLoadDefault: 'Cargar PFi por defecto',
+    selectLanguage: 'Idioma',
+    chooseLogo: 'Elegir imagen de logotipo'
+  },
+  fr: {
+    appTitle: 'Organigramme',
+    save: 'Enregistrer', excel: 'Excel', export: 'Exporter', import: 'Importer', reset: 'R\u00e9initialiser',
+    expandAll: 'Tout d\u00e9plier', collapseAll: 'Tout replier',
+    tierKey: 'Niveaux',
+    tiers: 'Niveaux', roles: 'Postes', headcount: 'Effectif', depts: 'Services', billable: 'Facturable',
+    savedLocally: 'Enregistr\u00e9', saving: 'Enregistrement\u2026', saveFailed: '\u00c9chec',
+    tier: 'Niveau', dept: 'Serv.', vacant: 'Vacant',
+    person: 'Personne', people: 'Personnes',
+    clickAddName: 'Ajouter un nom', clickNameDept: 'Nommer le service',
+    emptyRole: '\u2014 poste \u2014',
+    editDetails: 'Modifier les d\u00e9tails', editDepartment: 'Modifier le service',
+    addDirectReport: 'Ajouter un collaborateur direct', addRoleToDept: 'Ajouter un poste au service',
+    addDepartment: 'Ajouter un service', addPeer: 'Ajouter un coll\u00e8gue du m\u00eame niveau',
+    deleteRole: 'Supprimer le poste', deleteDepartment: 'Supprimer le service',
+    cancel: 'Annuler', save_changes: 'Enregistrer',
+    name: 'Nom', role: 'Poste / Titre', notes: 'Notes', deptName: 'Nom du service',
+    optional: '(facultatif)',
+    billableResource: 'Ressource facturable',
+    billableHelp: 'Le temps est factur\u00e9 aux clients ou aux projets.',
+    chargeRate: 'Taux horaire', perHour: '/ h',
+    createRole: 'Cr\u00e9er le poste', createDept: 'Cr\u00e9er le service',
+    emptyTitle: 'Commencez par un poste racine',
+    emptyText: 'Ajoutez le poste de plus haut niveau pour construire votre organigramme.',
+    emptyAddRoot: 'Ajouter un poste racine', emptyLoadDefault: 'Charger PFi par d\u00e9faut',
+    selectLanguage: 'Langue',
+    chooseLogo: 'Choisir une image de logo'
+  },
+  de: {
+    appTitle: 'Organigramm',
+    save: 'Speichern', excel: 'Excel', export: 'Exportieren', import: 'Importieren', reset: 'Zur\u00fccksetzen',
+    expandAll: 'Alle ausklappen', collapseAll: 'Alle einklappen',
+    tierKey: 'Ebenen',
+    tiers: 'Ebenen', roles: 'Stellen', headcount: 'Belegschaft', depts: 'Abt.', billable: 'Abrechenbar',
+    savedLocally: 'Gespeichert', saving: 'Speichern\u2026', saveFailed: 'Fehler',
+    tier: 'Ebene', dept: 'Abt.', vacant: 'Vakant',
+    person: 'Person', people: 'Personen',
+    clickAddName: 'Namen hinzuf\u00fcgen', clickNameDept: 'Abteilung benennen',
+    emptyRole: '\u2014 Stelle \u2014',
+    editDetails: 'Details bearbeiten', editDepartment: 'Abteilung bearbeiten',
+    addDirectReport: 'Direkt unterstellten Mitarbeiter hinzuf\u00fcgen', addRoleToDept: 'Stelle zur Abteilung hinzuf\u00fcgen',
+    addDepartment: 'Abteilung hinzuf\u00fcgen', addPeer: 'Kollegen auf derselben Ebene hinzuf\u00fcgen',
+    deleteRole: 'Stelle l\u00f6schen', deleteDepartment: 'Abteilung l\u00f6schen',
+    cancel: 'Abbrechen', save_changes: '\u00c4nderungen speichern',
+    name: 'Name', role: 'Position / Titel', notes: 'Notizen', deptName: 'Name der Abteilung',
+    optional: '(optional)',
+    billableResource: 'Abrechenbare Ressource',
+    billableHelp: 'Die Zeit wird Kunden oder Projekten in Rechnung gestellt.',
+    chargeRate: 'Stundensatz', perHour: '/ Std',
+    createRole: 'Stelle erstellen', createDept: 'Abteilung erstellen',
+    emptyTitle: 'Beginnen Sie mit einer Wurzelstelle',
+    emptyText: 'F\u00fcgen Sie die oberste Stelle hinzu, um Ihr Organigramm zu erstellen.',
+    emptyAddRoot: 'Wurzelstelle hinzuf\u00fcgen', emptyLoadDefault: 'PFi-Standard laden',
+    selectLanguage: 'Sprache',
+    chooseLogo: 'Logobild ausw\u00e4hlen'
+  },
+  pt: {
+    appTitle: 'Organograma',
+    save: 'Salvar', excel: 'Excel', export: 'Exportar', import: 'Importar', reset: 'Redefinir',
+    expandAll: 'Expandir tudo', collapseAll: 'Recolher tudo',
+    tierKey: 'N\u00edveis',
+    tiers: 'N\u00edveis', roles: 'Cargos', headcount: 'Efetivo', depts: 'Deptos', billable: 'Faturado',
+    savedLocally: 'Salvo', saving: 'Salvando\u2026', saveFailed: 'Falha',
+    tier: 'N\u00edvel', dept: 'Depto', vacant: 'Vago',
+    person: 'Pessoa', people: 'Pessoas',
+    clickAddName: 'Adicionar nome', clickNameDept: 'Nomear departamento',
+    emptyRole: '\u2014 cargo \u2014',
+    editDetails: 'Editar detalhes', editDepartment: 'Editar departamento',
+    addDirectReport: 'Adicionar subordinado direto', addRoleToDept: 'Adicionar cargo ao departamento',
+    addDepartment: 'Adicionar departamento', addPeer: 'Adicionar par no mesmo n\u00edvel',
+    deleteRole: 'Excluir cargo', deleteDepartment: 'Excluir departamento',
+    cancel: 'Cancelar', save_changes: 'Salvar altera\u00e7\u00f5es',
+    name: 'Nome', role: 'Cargo / T\u00edtulo', notes: 'Observa\u00e7\u00f5es', deptName: 'Nome do departamento',
+    optional: '(opcional)',
+    billableResource: 'Recurso faturado',
+    billableHelp: 'O tempo \u00e9 cobrado de clientes ou projetos.',
+    chargeRate: 'Taxa hor\u00e1ria', perHour: '/ h',
+    createRole: 'Criar cargo', createDept: 'Criar departamento',
+    emptyTitle: 'Comece com um cargo raiz',
+    emptyText: 'Adicione o cargo de mais alto n\u00edvel para come\u00e7ar a construir seu organograma.',
+    emptyAddRoot: 'Adicionar cargo raiz', emptyLoadDefault: 'Carregar padr\u00e3o PFi',
+    selectLanguage: 'Idioma',
+    chooseLogo: 'Escolher imagem do logotipo'
+  },
+  it: {
+    appTitle: 'Organigramma',
+    save: 'Salva', excel: 'Excel', export: 'Esporta', import: 'Importa', reset: 'Reimposta',
+    expandAll: 'Espandi tutto', collapseAll: 'Comprimi tutto',
+    tierKey: 'Livelli',
+    tiers: 'Livelli', roles: 'Ruoli', headcount: 'Organico', depts: 'Reparti', billable: 'Fatturabile',
+    savedLocally: 'Salvato', saving: 'Salvataggio\u2026', saveFailed: 'Errore',
+    tier: 'Livello', dept: 'Rep.', vacant: 'Vacante',
+    person: 'Persona', people: 'Persone',
+    clickAddName: 'Aggiungi nome', clickNameDept: 'Nomina reparto',
+    emptyRole: '\u2014 ruolo \u2014',
+    editDetails: 'Modifica dettagli', editDepartment: 'Modifica reparto',
+    addDirectReport: 'Aggiungi riporto diretto', addRoleToDept: 'Aggiungi ruolo al reparto',
+    addDepartment: 'Aggiungi reparto', addPeer: 'Aggiungi pari livello',
+    deleteRole: 'Elimina ruolo', deleteDepartment: 'Elimina reparto',
+    cancel: 'Annulla', save_changes: 'Salva modifiche',
+    name: 'Nome', role: 'Ruolo / Titolo', notes: 'Note', deptName: 'Nome del reparto',
+    optional: '(opzionale)',
+    billableResource: 'Risorsa fatturabile',
+    billableHelp: 'Il tempo viene fatturato a clienti o progetti.',
+    chargeRate: 'Tariffa oraria', perHour: '/ h',
+    createRole: 'Crea ruolo', createDept: 'Crea reparto',
+    emptyTitle: 'Inizia con un ruolo radice',
+    emptyText: 'Aggiungi il ruolo di livello pi\u00f9 alto per iniziare a costruire il tuo organigramma.',
+    emptyAddRoot: 'Aggiungi ruolo radice', emptyLoadDefault: 'Carica predefinito PFi',
+    selectLanguage: 'Lingua',
+    chooseLogo: 'Scegli immagine del logo'
+  },
+  zh: {
+    appTitle: '\u7ec4\u7ec7\u67b6\u6784\u56fe',
+    save: '\u4fdd\u5b58', excel: 'Excel', export: '\u5bfc\u51fa', import: '\u5bfc\u5165', reset: '\u91cd\u7f6e',
+    expandAll: '\u5168\u90e8\u5c55\u5f00', collapseAll: '\u5168\u90e8\u6298\u53e0',
+    tierKey: '\u5c42\u7ea7',
+    tiers: '\u5c42\u7ea7', roles: '\u804c\u4f4d', headcount: '\u4eba\u6570', depts: '\u90e8\u95e8', billable: '\u8ba1\u8d39',
+    savedLocally: '\u5df2\u4fdd\u5b58', saving: '\u4fdd\u5b58\u4e2d\u2026', saveFailed: '\u4fdd\u5b58\u5931\u8d25',
+    tier: '\u5c42\u7ea7', dept: '\u90e8\u95e8', vacant: '\u7a7a\u7f3a',
+    person: '\u4eba', people: '\u4eba',
+    clickAddName: '\u70b9\u51fb\u6dfb\u52a0\u59d3\u540d', clickNameDept: '\u547d\u540d\u90e8\u95e8',
+    emptyRole: '\u2014 \u804c\u4f4d \u2014',
+    editDetails: '\u7f16\u8f91\u8be6\u60c5', editDepartment: '\u7f16\u8f91\u90e8\u95e8',
+    addDirectReport: '\u6dfb\u52a0\u76f4\u63a5\u4e0b\u5c5e', addRoleToDept: '\u5411\u90e8\u95e8\u6dfb\u52a0\u804c\u4f4d',
+    addDepartment: '\u6dfb\u52a0\u90e8\u95e8', addPeer: '\u6dfb\u52a0\u540c\u7ea7\u540c\u4e8b',
+    deleteRole: '\u5220\u9664\u804c\u4f4d', deleteDepartment: '\u5220\u9664\u90e8\u95e8',
+    cancel: '\u53d6\u6d88', save_changes: '\u4fdd\u5b58\u66f4\u6539',
+    name: '\u59d3\u540d', role: '\u804c\u4f4d / \u5934\u8854', notes: '\u5907\u6ce8', deptName: '\u90e8\u95e8\u540d\u79f0',
+    optional: '\uff08\u9009\u586b\uff09',
+    billableResource: '\u8ba1\u8d39\u8d44\u6e90',
+    billableHelp: '\u65f6\u95f4\u53ef\u5411\u5ba2\u6237\u6216\u9879\u76ee\u8ba1\u8d39\u3002',
+    chargeRate: '\u6536\u8d39\u7387', perHour: '/ \u5c0f\u65f6',
+    createRole: '\u521b\u5efa\u804c\u4f4d', createDept: '\u521b\u5efa\u90e8\u95e8',
+    emptyTitle: '\u4ece\u6839\u804c\u4f4d\u5f00\u59cb',
+    emptyText: '\u6dfb\u52a0\u6700\u9ad8\u7ea7\u804c\u4f4d\uff0c\u5f00\u59cb\u6784\u5efa\u60a8\u7684\u7ec4\u7ec7\u67b6\u6784\u56fe\u3002',
+    emptyAddRoot: '\u6dfb\u52a0\u6839\u804c\u4f4d', emptyLoadDefault: '\u52a0\u8f7d PFi \u9ed8\u8ba4\u7ed3\u6784',
+    selectLanguage: '\u8bed\u8a00',
+    chooseLogo: '\u9009\u62e9\u6807\u5fd7\u56fe\u7247'
+  },
+  ja: {
+    appTitle: '\u7d44\u7e54\u56f3',
+    save: '\u4fdd\u5b58', excel: 'Excel', export: '\u30a8\u30af\u30b9\u30dd\u30fc\u30c8', import: '\u30a4\u30f3\u30dd\u30fc\u30c8', reset: '\u30ea\u30bb\u30c3\u30c8',
+    expandAll: '\u3059\u3079\u3066\u5c55\u958b', collapseAll: '\u3059\u3079\u3066\u6298\u308a\u305f\u305f\u3080',
+    tierKey: '\u968e\u5c64',
+    tiers: '\u968e\u5c64', roles: '\u8077\u4f4d', headcount: '\u4eba\u54e1', depts: '\u90e8\u9580', billable: '\u8ab2\u91d1',
+    savedLocally: '\u4fdd\u5b58\u6e08\u307f', saving: '\u4fdd\u5b58\u4e2d\u2026', saveFailed: '\u5931\u6557',
+    tier: '\u968e\u5c64', dept: '\u90e8', vacant: '\u7a7a\u5e2d',
+    person: '\u4eba', people: '\u4eba',
+    clickAddName: '\u540d\u524d\u3092\u8ffd\u52a0', clickNameDept: '\u90e8\u9580\u540d\u3092\u4ed8\u3051\u308b',
+    emptyRole: '\u2014 \u8077\u4f4d \u2014',
+    editDetails: '\u8a73\u7d30\u3092\u7de8\u96c6', editDepartment: '\u90e8\u9580\u3092\u7de8\u96c6',
+    addDirectReport: '\u76f4\u63a5\u90e8\u4e0b\u3092\u8ffd\u52a0', addRoleToDept: '\u90e8\u9580\u306b\u8077\u4f4d\u3092\u8ffd\u52a0',
+    addDepartment: '\u90e8\u9580\u3092\u8ffd\u52a0', addPeer: '\u540c\u3058\u968e\u5c64\u306e\u540c\u50da\u3092\u8ffd\u52a0',
+    deleteRole: '\u8077\u4f4d\u3092\u524a\u9664', deleteDepartment: '\u90e8\u9580\u3092\u524a\u9664',
+    cancel: '\u30ad\u30e3\u30f3\u30bb\u30eb', save_changes: '\u5909\u66f4\u3092\u4fdd\u5b58',
+    name: '\u6c0f\u540d', role: '\u8077\u4f4d / \u30bf\u30a4\u30c8\u30eb', notes: '\u30e1\u30e2', deptName: '\u90e8\u9580\u540d',
+    optional: '\uff08\u4efb\u610f\uff09',
+    billableResource: '\u8ab2\u91d1\u53ef\u80fd\u30ea\u30bd\u30fc\u30b9',
+    billableHelp: '\u6642\u9593\u306f\u9867\u5ba2\u3084\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u306b\u8ab2\u91d1\u3055\u308c\u307e\u3059\u3002',
+    chargeRate: '\u6642\u9593\u5358\u4fa1', perHour: '/ \u6642',
+    createRole: '\u8077\u4f4d\u3092\u4f5c\u6210', createDept: '\u90e8\u9580\u3092\u4f5c\u6210',
+    emptyTitle: '\u30eb\u30fc\u30c8\u8077\u4f4d\u304b\u3089\u59cb\u3081\u308b',
+    emptyText: '\u6700\u4e0a\u4f4d\u306e\u8077\u4f4d\u3092\u8ffd\u52a0\u3057\u3066\u3001\u7d44\u7e54\u56f3\u306e\u4f5c\u6210\u3092\u958b\u59cb\u3057\u307e\u3059\u3002',
+    emptyAddRoot: '\u30eb\u30fc\u30c8\u8077\u4f4d\u3092\u8ffd\u52a0', emptyLoadDefault: 'PFi \u30c7\u30d5\u30a9\u30eb\u30c8\u3092\u8aad\u307f\u8fbc\u3080',
+    selectLanguage: '\u8a00\u8a9e',
+    chooseLogo: '\u30ed\u30b4\u753b\u50cf\u3092\u9078\u629e'
+  }
+};
+
+let currentLang = 'en';
+
+function detectLanguage() {
+  // 1. Explicit user preference always wins
+  const stored = localStorage.getItem(LANG_KEY);
+  if (stored && TRANSLATIONS[stored]) return stored;
+
+  // 2. Build a prioritized list of candidate locales from every signal
+  //    the browser exposes about the user's regional setup.
+  const candidates = [];
+
+  // (a) navigator.languages = user's preferred-languages list, which on
+  //     Windows/macOS/Linux/iOS/Android is sourced directly from OS
+  //     "display language" settings. This is the most reliable signal
+  //     of what the user actually wants to read.
+  if (navigator.languages && navigator.languages.length) {
+    candidates.push(...navigator.languages);
+  } else if (navigator.language) {
+    candidates.push(navigator.language);
+  }
+
+  // (b) Intl date/time locale = system locale fallback, useful when
+  //     navigator.languages is empty or generic (e.g. some Linux setups,
+  //     some kiosk browsers). This reflects the OS region setting,
+  //     which is what drives clock format, currency, etc.
+  try {
+    const intlLocale = Intl.DateTimeFormat().resolvedOptions().locale;
+    if (intlLocale) candidates.push(intlLocale);
+  } catch (_) { /* Intl not available — silently skip */ }
+
+  // Match against supported translations (strip region suffix: en-AU -> en)
+  for (const lang of candidates) {
+    const short = String(lang).toLowerCase().split('-')[0];
+    if (TRANSLATIONS[short]) return short;
+  }
+  return 'en';
+}
+
+function t(key, params) {
+  let s = (TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang][key]) || TRANSLATIONS.en[key] || key;
+  if (params) {
+    for (const [k, v] of Object.entries(params)) {
+      s = s.replace(new RegExp('\\{' + k + '\\}', 'g'), v);
+    }
+  }
+  return s;
+}
+
+function applyStaticTranslations() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    el.textContent = t(key);
+  });
+  // Update the language button label
+  const langCurrent = document.getElementById('lang-current');
+  if (langCurrent) langCurrent.textContent = currentLang.toUpperCase();
+}
+
+function switchLanguage(lang) {
+  if (!TRANSLATIONS[lang]) return;
+  currentLang = lang;
+  try { localStorage.setItem(LANG_KEY, lang); } catch (_) {}
+  applyStaticTranslations();
+  render();
+  // Close dropdown
+  document.getElementById('lang-dropdown')?.classList.remove('is-open');
+  document.getElementById('lang-btn')?.classList.remove('is-open');
+}
+
+function renderLanguageDropdown() {
+  const dd = document.getElementById('lang-dropdown');
+  if (!dd) return;
+  dd.innerHTML = SUPPORTED_LANGUAGES.map(l => `
+    <button class="lang-item ${l.code === currentLang ? 'is-active' : ''}" data-action="select-language" data-lang="${l.code}">
+      <span>${l.native}</span>
+      <span class="lang-item-code">${l.code.toUpperCase()}</span>
+    </button>
+  `).join('');
+}
+
+// ============================================================
+//   CUSTOM LOGO (PNG / image upload)
+// ============================================================
+function applyCustomLogo() {
+  const content = document.getElementById('brand-content');
+  const brand = document.getElementById('brand-area');
+  const removeBtn = document.getElementById('brand-remove-btn');
+  if (!content) return;
+  const logo = localStorage.getItem(LOGO_KEY);
+  if (logo) {
+    content.innerHTML = `<img src="${escapeHtml(logo)}" class="brand-logo-img" alt="Logo">`;
+    brand?.classList.add('has-logo');
+    if (removeBtn) removeBtn.style.display = 'inline-flex';
+  } else {
+    content.innerHTML = '<div class="brand-mark">PF<span>i</span></div>';
+    brand?.classList.remove('has-logo');
+    if (removeBtn) removeBtn.style.display = 'none';
+  }
+}
+
+function uploadCustomLogo(file) {
+  if (!file) return;
+  if (!file.type.startsWith('image/')) {
+    alert('Please choose an image file (PNG, JPG, SVG, or WebP).');
+    return;
+  }
+  if (file.size > 1024 * 1024) {
+    alert('Image is larger than 1MB. Please choose a smaller file.');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      localStorage.setItem(LOGO_KEY, e.target.result);
+      applyCustomLogo();
+    } catch (err) {
+      alert('Could not save the logo. Browser storage may be full.');
+    }
+  };
+  reader.onerror = () => alert('Could not read the image file.');
+  reader.readAsDataURL(file);
+}
+
+function resetCustomLogo() {
+  localStorage.removeItem(LOGO_KEY);
+  applyCustomLogo();
+}
+
 
 // -------- Icons (inline SVG, no emoji per style guide) --------
 const ICONS = {
@@ -1178,8 +2482,10 @@ const ICONS = {
   edit: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 2l3 3-8 8H3v-3l8-8z"/></svg>',
   addChild: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h4l2 2h4v6.5H3z"/><path d="M9 9v3M7.5 10.5h3"/></svg>',
   addSibling: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2.5" width="12" height="4" rx="0.5"/><rect x="2" y="9.5" width="8" height="4" rx="0.5"/><path d="M13 10.5v3M11.5 12h3"/></svg>',
+  addDept: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4.5h4l1.5 1.5h6.5v7.5h-12z"/><path d="M11 8.5v3M9.5 10h3"/></svg>',
   trash: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h10M6 4V2.5h4V4M4.5 4l.7 9.5h5.6L11.5 4"/></svg>',
   note: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2h7l3 3v9H3z"/><path d="M5 7h6M5 10h4"/></svg>',
+  save: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2.5h8l2 2v9H3z"/><path d="M5 2.5v4h6v-4M5 10h6"/></svg>',
   plus: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v10M3 8h10"/></svg>'
 };
 
@@ -1241,30 +2547,45 @@ function maxTier() {
   return Math.max(0, ...Object.values(state.nodes).map(n => n.tier));
 }
 
-// -------- Vacancy logic --------
-// A role is "vacant" when its name reads "Position Vacant" or "Vacant Position"
-// (case-insensitive, whitespace-tolerant). When a role is vacant, its team
-// effectively reports to the manager above, so we bubble those reports up.
+// -------- Vacancy & Department logic --------
+// A role is "vacant" when its name reads "Position Vacant" or "Vacant Position".
+// A node is a "department" when type === 'department'. Departments are
+// container nodes (not people) that group roles together visually.
+// Both vacant roles AND departments are "transparent" for counting purposes:
+// their team members count toward the manager above as direct reports.
 function isVacant(node) {
   if (!node || !node.name) return false;
+  if (isDepartment(node)) return false; // departments are never "vacant"
   const normalized = node.name.trim().toLowerCase().replace(/\s+/g, ' ');
   return normalized === 'position vacant' || normalized === 'vacant position';
 }
 
+function isDepartment(node) {
+  return !!node && node.type === 'department';
+}
+
+function isTransparent(node) {
+  // Both vacant roles and departments are transparent to counting:
+  // their subordinates bubble up to the manager above.
+  return isVacant(node) || isDepartment(node);
+}
+
 // Effective direct-report count:
-//   - Filled child counts as 1
-//   - Vacant child contributes its own effective count (recursive bubble-up)
-// Returns 0 if the node itself is vacant (no manager to manage anyone).
+//   - Filled role child counts as 1
+//   - Vacant child OR department child contributes its own effective count (recursive bubble-up)
+// Returns 0 if the node itself is vacant or a department-acting-as-manager
+// is not applicable (departments use totalHeadcount for their display instead).
 function effectiveDirectReports(nodeId) {
   const node = state.nodes[nodeId];
-  if (!node || isVacant(node)) return 0;
+  if (!node) return 0;
+  if (isVacant(node)) return 0;
   return _bubbledReportsBelow(nodeId);
 }
 
 function _bubbledReportsBelow(nodeId) {
   let total = 0;
   for (const kid of getChildren(nodeId)) {
-    if (isVacant(kid)) {
+    if (isTransparent(kid)) {
       total += _bubbledReportsBelow(kid.id);
     } else {
       total += 1;
@@ -1277,11 +2598,14 @@ function hasVacantDirectChild(nodeId) {
   return getChildren(nodeId).some(k => isVacant(k));
 }
 
+function hasDepartmentDirectChild(nodeId) {
+  return getChildren(nodeId).some(k => isDepartment(k));
+}
+
 // Total headcount under supervision at ALL levels.
-// Counts every non-vacant descendant. Vacant intermediaries are walked
-// through (their subordinates still count) but the vacant role itself
-// is not counted as a person. If the node itself is vacant, returns 0
-// (a vacant role doesn't "supervise" anyone).
+// Counts every non-vacant, non-department descendant (i.e. real people).
+// Departments and vacant intermediaries are walked through but not counted
+// as a person themselves.
 function totalHeadcount(nodeId) {
   const node = state.nodes[nodeId];
   if (!node || isVacant(node)) return 0;
@@ -1291,8 +2615,8 @@ function totalHeadcount(nodeId) {
 function _countFilledDescendants(nodeId) {
   let total = 0;
   for (const kid of getChildren(nodeId)) {
-    if (!isVacant(kid)) total += 1;
-    total += _countFilledDescendants(kid.id); // recurse through vacant + filled
+    if (!isVacant(kid) && !isDepartment(kid)) total += 1;
+    total += _countFilledDescendants(kid.id);
   }
   return total;
 }
@@ -1340,17 +2664,17 @@ function setSaveStatus(s) {
   const txt = el.querySelector('.save-text');
   if (s === 'saving') {
     el.classList.add('saving');
-    if (txt) txt.textContent = 'Saving…';
+    if (txt) txt.textContent = t('saving');
   } else if (s === 'error') {
     el.classList.add('error');
-    if (txt) txt.textContent = 'Save failed';
+    if (txt) txt.textContent = t('saveFailed');
   } else {
-    if (txt) txt.textContent = 'Saved locally';
+    if (txt) txt.textContent = t('savedLocally');
   }
 }
 
 // -------- CRUD --------
-function _createNode({ parentId, name, role, notes }) {
+function _createNode({ parentId, name, role, notes, type, billable, chargeRate }) {
   const id = genId();
   const tier = parentId ? state.nodes[parentId].tier + 1 : 1;
   const siblings = getChildren(parentId);
@@ -1359,6 +2683,9 @@ function _createNode({ parentId, name, role, notes }) {
     name: name || '',
     role: role || '',
     notes: notes || '',
+    type: type === 'department' ? 'department' : 'role',
+    billable: !!billable,
+    chargeRate: typeof chargeRate === 'number' ? chargeRate : null,
     tier,
     parentId: parentId || null,
     order: siblings.length
@@ -1511,11 +2838,11 @@ function renderEmptyState() {
   return `
     <div class="empty-state">
       <div class="empty-eyebrow">Nothing here yet</div>
-      <div class="empty-title">Start with <em>a root role</em></div>
-      <div class="empty-text">Add the top-level role — Managing Director, CEO, whoever sits at the top — and build downward from there.</div>
+      <div class="empty-title">${t('emptyTitle')}</div>
+      <div class="empty-text">${t('emptyText')}</div>
       <div class="empty-actions">
-        <button class="btn btn-primary" data-action="add-root">${ICONS.plus} Add root role</button>
-        <button class="btn btn-outline" data-action="seed-default">Load PFi default</button>
+        <button class="btn btn-primary" data-action="add-root">${ICONS.plus} ${t('emptyAddRoot')}</button>
+        <button class="btn btn-outline" data-action="seed-default">${t('emptyLoadDefault')}</button>
       </div>
     </div>
   `;
@@ -1544,47 +2871,55 @@ function renderNode(id) {
 }
 
 function renderCard(node, childCount, isCollapsed) {
+  if (isDepartment(node)) return renderDepartmentCard(node, childCount, isCollapsed);
+  return renderRoleCard(node, childCount, isCollapsed);
+}
+
+function renderRoleCard(node, childCount, isCollapsed) {
   const color = tierColor(node.tier);
-  const tierLabel = `Tier ${String(node.tier).padStart(2, '0')}`;
+  const tierLabel = `${t('tier')} ${String(node.tier).padStart(2, '0')}`;
   const vacant = isVacant(node);
+  const billable = !!node.billable;
+  const rate = node.chargeRate;
   const effectiveCount = effectiveDirectReports(node.id);
   const totalCount = totalHeadcount(node.id);
-  const bubbled = !vacant && hasVacantDirectChild(node.id);
-  const showSplit = totalCount > effectiveCount; // only show /N when extends deeper
+  const bubbled = !vacant && (hasVacantDirectChild(node.id) || hasDepartmentDirectChild(node.id));
+  const showSplit = totalCount > effectiveCount;
 
-  // Tooltip explains both numbers in plain language
   const tooltipParts = [];
   tooltipParts.push(`${effectiveCount} direct report${effectiveCount === 1 ? '' : 's'}`);
-  if (showSplit) {
-    tooltipParts.push(`${totalCount} total under supervision (all tiers below)`);
-  }
-  if (bubbled) {
-    tooltipParts.push('includes reports bubbled up from vacant position(s)');
-  }
+  if (showSplit) tooltipParts.push(`${totalCount} total under supervision (all tiers below)`);
+  if (bubbled) tooltipParts.push('includes reports bubbled up from vacant position(s) or department(s)');
   const badgeTitle = tooltipParts.join(' \u00b7 ');
 
-  // Badge inner HTML — split format only when total > direct
   const badgeContent = showSplit
     ? `<span class="br-direct">${effectiveCount}</span><span class="br-divider">/</span><span class="br-total">${totalCount}</span>`
     : `<span class="br-direct">${effectiveCount}</span>`;
 
   return `
-    <div class="card ${isCollapsed ? 'is-collapsed' : ''} ${vacant ? 'is-vacant' : ''}"
+    <div class="card ${isCollapsed ? 'is-collapsed' : ''} ${vacant ? 'is-vacant' : ''} ${billable ? 'is-billable' : ''}"
          style="--tier-color: ${color}"
          data-id="${node.id}"
          draggable="${node.parentId ? 'true' : 'false'}">
+      ${billable ? `<span class="card-billable-marker" title="${t('billableResource')}">${t('billable')}</span>` : ''}
       <div class="card-header">
-        <span class="card-tier">${tierLabel}${vacant ? ' \u00b7 <span class="tier-vacant">Vacant</span>' : ''}</span>
+        <span class="card-tier">${tierLabel}${vacant ? ' \u00b7 <span class="tier-vacant">' + t('vacant') + '</span>' : ''}</span>
         <button class="card-menu-btn" data-action="toggle-menu" data-id="${node.id}" aria-label="Card actions">
           ${ICONS.menu}
         </button>
       </div>
       <div class="card-name ${!node.name ? 'is-empty' : ''}" data-action="edit" data-id="${node.id}" title="Click to edit">
-        ${escapeHtml(node.name) || 'Click to add name'}
+        ${escapeHtml(node.name) || t('clickAddName')}
       </div>
       <div class="card-role" data-action="edit" data-id="${node.id}">
-        ${escapeHtml(node.role) || '<span style="color:var(--silver)">— role —</span>'}
+        ${escapeHtml(node.role) || '<span style="color:var(--silver)">' + t('emptyRole') + '</span>'}
       </div>
+      ${rate ? `
+        <div class="card-rate" title="${t('chargeRate')}">
+          <span>${formatCurrency(rate)}</span>
+          <span class="card-rate-unit">${t('perHour')}</span>
+        </div>
+      ` : ''}
       ${node.notes ? `
         <div class="card-notes" data-action="edit" data-id="${node.id}" title="Click to view / edit notes">
           ${ICONS.note}
@@ -1606,15 +2941,88 @@ function renderCard(node, childCount, isCollapsed) {
   `;
 }
 
+function formatCurrency(amount) {
+  // Use Intl to format the rate in the current locale
+  try {
+    const fmt = new Intl.NumberFormat(currentLang === 'en' ? 'en-AU' : currentLang, {
+      style: 'currency',
+      currency: currencyForLocale(currentLang),
+      maximumFractionDigits: 0
+    });
+    return fmt.format(amount);
+  } catch (_) {
+    return '$' + amount;
+  }
+}
+
+function currencyForLocale(lang) {
+  // Sensible default per language; user data is just a number, presentation localises
+  switch (lang) {
+    case 'es': return 'EUR';
+    case 'fr': return 'EUR';
+    case 'de': return 'EUR';
+    case 'it': return 'EUR';
+    case 'pt': return 'BRL';
+    case 'zh': return 'CNY';
+    case 'ja': return 'JPY';
+    default:   return 'AUD';
+  }
+}
+
+function renderDepartmentCard(node, childCount, isCollapsed) {
+  const color = tierColor(node.tier);
+  const tierLabel = `${t('tier')} ${String(node.tier).padStart(2, '0')}`;
+  const headcount = totalHeadcount(node.id);
+  const directCount = effectiveDirectReports(node.id);
+
+  return `
+    <div class="card is-department ${isCollapsed ? 'is-collapsed' : ''}"
+         style="--tier-color: ${color}"
+         data-id="${node.id}"
+         draggable="${node.parentId ? 'true' : 'false'}">
+      <div class="card-header">
+        <span class="card-tier"><span class="dept-label">${t('dept')}</span> \u00b7 ${tierLabel}</span>
+        <button class="card-menu-btn" data-action="toggle-menu" data-id="${node.id}" aria-label="Card actions">
+          ${ICONS.menu}
+        </button>
+      </div>
+      <div class="card-name ${!node.name ? 'is-empty' : ''}" data-action="edit" data-id="${node.id}" title="Click to edit">
+        ${escapeHtml(node.name) || t('clickNameDept')}
+      </div>
+      <div class="${headcount > 0 ? 'dept-headcount' : 'dept-headcount dept-headcount-empty'}"
+           title="${headcount} ${headcount === 1 ? t('person') : t('people')}${directCount !== headcount && directCount > 0 ? ' \u00b7 ' + directCount + ' direct' : ''}">
+        <span class="dept-headcount-num">${headcount}</span>
+        <span>${headcount === 1 ? t('person') : t('people')}</span>
+      </div>
+      ${node.notes ? `
+        <div class="card-notes" data-action="edit" data-id="${node.id}" title="Click to view / edit notes">
+          ${ICONS.note}
+          <span class="card-notes-text">${escapeHtml(node.notes)}</span>
+        </div>
+      ` : ''}
+      ${openMenuId === node.id ? renderMenu(node) : ''}
+    </div>
+    ${childCount > 0 ? `
+      <button class="card-collapse" data-action="collapse" data-id="${node.id}"
+              title="${isCollapsed ? 'Expand ' + childCount + ' members' : 'Collapse members'}">
+        ${isCollapsed ? '+' : '\u2212'}
+      </button>
+      ${isCollapsed ? `<span class="card-collapse-count">+${childCount} hidden</span>` : ''}
+    ` : ''}
+  `;
+}
+
 function renderMenu(node) {
   const canAddSibling = !!node.parentId;
+  const isDept = isDepartment(node);
   return `
     <div class="card-menu-dropdown" data-menu-for="${node.id}">
-      <button class="menu-item" data-action="edit" data-id="${node.id}">${ICONS.edit} Edit details</button>
-      <button class="menu-item" data-action="add-child" data-id="${node.id}">${ICONS.addChild} Add direct report</button>
-      <button class="menu-item" data-action="add-sibling" data-id="${node.id}" ${canAddSibling ? '' : 'disabled'}>${ICONS.addSibling} Add peer at same tier</button>
+      <button class="menu-item" data-action="edit" data-id="${node.id}">${ICONS.edit} ${isDept ? t('editDepartment') : t('editDetails')}</button>
+      <button class="menu-item" data-action="add-child" data-id="${node.id}">${ICONS.addChild} ${isDept ? t('addRoleToDept') : t('addDirectReport')}</button>
+      <button class="menu-item" data-action="add-department" data-id="${node.id}">${ICONS.addDept} ${t('addDepartment')}</button>
+      <button class="menu-item" data-action="add-sibling" data-id="${node.id}" ${canAddSibling ? '' : 'disabled'}>${ICONS.addSibling} ${t('addPeer')}</button>
       <div class="menu-divider"></div>
-      <button class="menu-item danger" data-action="delete" data-id="${node.id}">${ICONS.trash} Delete role</button>
+      <button class="menu-item danger" data-action="delete" data-id="${node.id}">${ICONS.trash} ${isDept ? t('deleteDepartment') : t('deleteRole')}</button>
     </div>
   `;
 }
@@ -1622,9 +3030,25 @@ function renderMenu(node) {
 function updateHeaderStats() {
   document.getElementById('stat-tiers').textContent = maxTier();
   const allNodes = Object.values(state.nodes);
-  document.getElementById('stat-roles').textContent = allNodes.length;
-  const filled = allNodes.filter(n => !isVacant(n)).length;
+  const roles = allNodes.filter(n => !isDepartment(n));
+  const depts = allNodes.length - roles.length;
+  document.getElementById('stat-roles').textContent = roles.length;
+  const filled = roles.filter(n => !isVacant(n)).length;
   document.getElementById('stat-headcount').textContent = filled;
+  const deptStatNum = document.getElementById('stat-departments');
+  const deptStatGroup = document.getElementById('stat-group-departments');
+  if (deptStatNum && deptStatGroup) {
+    deptStatGroup.style.display = depts > 0 ? 'flex' : 'none';
+    deptStatNum.textContent = depts;
+  }
+  // Billable filled roles
+  const billable = roles.filter(n => !isVacant(n) && n.billable).length;
+  const billStatNum = document.getElementById('stat-billable');
+  const billStatGroup = document.getElementById('stat-group-billable');
+  if (billStatNum && billStatGroup) {
+    billStatGroup.style.display = billable > 0 ? 'flex' : 'none';
+    billStatNum.textContent = billable;
+  }
 }
 
 function renderTierLegend() {
@@ -1635,7 +3059,7 @@ function renderTierLegend() {
     items.push(`
       <span class="tier-pill">
         <span class="tier-pill-swatch" style="background:${tierColor(i)}"></span>
-        Tier ${String(i).padStart(2, '0')}
+        ${t('tier')} ${String(i).padStart(2, '0')}
       </span>
     `);
   }
@@ -1655,32 +3079,65 @@ function openEditModal(id) {
   if (!node) return;
   const color = tierColor(node.tier);
   const tierLabel = `Tier ${String(node.tier).padStart(2, '0')}`;
+  const isDept = isDepartment(node);
 
-  modalOverlay.innerHTML = `
-    <div class="modal tier-themed" style="--modal-tier-color: ${color}">
-      <div class="modal-header">
-        <div class="modal-eyebrow">${tierLabel} · Edit role</div>
-        <div class="modal-title">Edit role details</div>
-      </div>
-      <div class="modal-body">
+  const formFields = isDept ? `
         <div class="form-group">
-          <label class="form-label" for="f-name">Name</label>
+          <label class="form-label" for="f-name">${t('deptName')}</label>
+          <input class="form-input" id="f-name" type="text" placeholder="e.g. Capital Projects" value="${escapeHtml(node.name)}" autocomplete="off">
+          <div class="form-help">Headcount of everyone inside this department flows up to the manager above as direct reports.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-notes">${t('notes')}</label>
+          <textarea class="form-textarea" id="f-notes" placeholder="Department purpose, charter, or any context\u2026">${escapeHtml(node.notes)}</textarea>
+        </div>
+  ` : `
+        <div class="form-group">
+          <label class="form-label" for="f-name">${t('name')}</label>
           <input class="form-input" id="f-name" type="text" placeholder="e.g. Jane Smith" value="${escapeHtml(node.name)}" autocomplete="off">
           <div class="form-help">Type <strong>"Position Vacant"</strong> to mark the seat empty &mdash; its team will count toward the manager above.</div>
         </div>
         <div class="form-group">
-          <label class="form-label" for="f-role">Role / Title</label>
+          <label class="form-label" for="f-role">${t('role')}</label>
           <input class="form-input" id="f-role" type="text" placeholder="e.g. Operations Manager" value="${escapeHtml(node.role)}" autocomplete="off">
         </div>
         <div class="form-group">
-          <label class="form-label" for="f-notes">Notes</label>
-          <textarea class="form-textarea" id="f-notes" placeholder="Responsibilities, reporting lines, key projects, internal context…">${escapeHtml(node.notes)}</textarea>
+          <div class="form-toggle-row ${node.billable ? 'is-on' : ''}" id="billable-toggle-row" data-action="toggle-billable">
+            <label class="form-toggle-label" for="f-billable">
+              <span class="form-toggle-title">${t('billableResource')}</span>
+              <span class="form-toggle-sub">${t('billableHelp')}</span>
+            </label>
+            <input type="checkbox" id="f-billable" ${node.billable ? 'checked' : ''}>
+            <span class="form-toggle-switch"></span>
+          </div>
+          <div class="form-rate-row ${node.billable ? 'is-visible' : ''}" id="billable-rate-row">
+            <label class="form-label" for="f-rate" style="margin-top:10px">${t('chargeRate')} <span style="color:var(--silver); font-weight:500; text-transform:none; letter-spacing:0">${t('optional')}</span></label>
+            <div class="form-rate-input-wrap">
+              <span class="form-rate-currency">$</span>
+              <input class="form-input" id="f-rate" type="number" min="0" step="1" placeholder="120" value="${node.chargeRate || ''}" autocomplete="off">
+              <span class="form-rate-unit-suffix">${t('perHour')}</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-notes">${t('notes')}</label>
+          <textarea class="form-textarea" id="f-notes" placeholder="Responsibilities, reporting lines, key projects, internal context\u2026">${escapeHtml(node.notes)}</textarea>
           <div class="form-help">Free-form. Useful for capturing context that won't fit on the card.</div>
         </div>
+  `;
+
+  modalOverlay.innerHTML = `
+    <div class="modal tier-themed" style="--modal-tier-color: ${color}">
+      <div class="modal-header">
+        <div class="modal-eyebrow">${tierLabel} \u00b7 Edit ${isDept ? 'department' : 'role'}</div>
+        <div class="modal-title">Edit ${isDept ? 'department' : 'role'} details</div>
+      </div>
+      <div class="modal-body">
+        ${formFields}
       </div>
       <div class="modal-footer">
-        <button class="btn btn-outline" data-action="close-modal">Cancel</button>
-        <button class="btn btn-primary" data-action="save-edit" data-id="${id}">Save changes</button>
+        <button class="btn btn-outline" data-action="close-modal">${t("cancel")}</button>
+        <button class="btn btn-primary" data-action="save-edit" data-id="${id}">${t("save_changes")}</button>
       </div>
     </div>
   `;
@@ -1688,28 +3145,72 @@ function openEditModal(id) {
   setTimeout(() => document.getElementById('f-name')?.focus(), 50);
 }
 
-function openAddModal({ parentId, type }) {
+function openAddModal({ parentId, type, nodeType }) {
   const parent = parentId ? state.nodes[parentId] : null;
   const newTier = parent ? parent.tier + 1 : 1;
+  const isDept = nodeType === 'department';
   let actualParentId = parentId;
   let title, eyebrow;
 
   if (type === 'sibling') {
     actualParentId = parent.parentId;
-    const grandparent = state.nodes[actualParentId];
-    title = 'Add peer at same tier';
-    eyebrow = `Tier ${String(parent.tier).padStart(2, '0')} · Same tier as ${escapeHtml(parent.role || 'this role')}`;
+    title = isDept ? 'Add department at same tier' : 'Add peer at same tier';
+    eyebrow = `Tier ${String(parent.tier).padStart(2, '0')} \u00b7 Same tier as ${escapeHtml(parent.role || parent.name || 'this')}`;
   } else if (type === 'root') {
     actualParentId = null;
-    title = 'Add root role';
-    eyebrow = 'Tier 01 · Top of organisation';
+    title = isDept ? 'Add root department' : 'Add root role';
+    eyebrow = 'Tier 01 \u00b7 Top of organisation';
   } else {
-    title = 'Add direct report';
-    eyebrow = `Tier ${String(newTier).padStart(2, '0')} · Reports to ${escapeHtml(parent.role || 'this role')}`;
+    title = isDept ? 'Add department' : 'Add direct report';
+    eyebrow = `Tier ${String(newTier).padStart(2, '0')} \u00b7 ${isDept ? 'Group of roles under' : 'Reports to'} ${escapeHtml(parent.role || parent.name || 'this')}`;
   }
 
   const displayTier = type === 'sibling' ? parent.tier : (type === 'root' ? 1 : newTier);
   const color = tierColor(displayTier);
+
+  // Department form has different fields — just name + notes
+  const formFields = isDept ? `
+        <div class="form-group">
+          <label class="form-label" for="f-name">${t('deptName')}</label>
+          <input class="form-input" id="f-name" type="text" placeholder="e.g. Capital Projects" autocomplete="off">
+          <div class="form-help">Groups roles together under this manager. Counts pass through transparently \u2014 the manager above sees everyone inside as direct reports.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-notes">${t('notes')} <span style="color:var(--silver); font-weight:500; text-transform:none; letter-spacing:0">${t('optional')}</span></label>
+          <textarea class="form-textarea" id="f-notes" placeholder="Department purpose, charter, or any context\u2026"></textarea>
+        </div>
+  ` : `
+        <div class="form-group">
+          <label class="form-label" for="f-role">${t('role')}</label>
+          <input class="form-input" id="f-role" type="text" placeholder="e.g. Quality Manager" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-name">${t('name')} <span style="color:var(--silver); font-weight:500; text-transform:none; letter-spacing:0">${t('optional')}</span></label>
+          <input class="form-input" id="f-name" type="text" placeholder="e.g. Jane Smith" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <div class="form-toggle-row" id="billable-toggle-row" data-action="toggle-billable">
+            <label class="form-toggle-label" for="f-billable">
+              <span class="form-toggle-title">${t('billableResource')}</span>
+              <span class="form-toggle-sub">${t('billableHelp')}</span>
+            </label>
+            <input type="checkbox" id="f-billable">
+            <span class="form-toggle-switch"></span>
+          </div>
+          <div class="form-rate-row" id="billable-rate-row">
+            <label class="form-label" for="f-rate" style="margin-top:10px">${t('chargeRate')} <span style="color:var(--silver); font-weight:500; text-transform:none; letter-spacing:0">${t('optional')}</span></label>
+            <div class="form-rate-input-wrap">
+              <span class="form-rate-currency">$</span>
+              <input class="form-input" id="f-rate" type="number" min="0" step="1" placeholder="120" autocomplete="off">
+              <span class="form-rate-unit-suffix">${t('perHour')}</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-notes">${t('notes')} <span style="color:var(--silver); font-weight:500; text-transform:none; letter-spacing:0">${t('optional')}</span></label>
+          <textarea class="form-textarea" id="f-notes" placeholder="Responsibilities, reporting lines, key projects, internal context\u2026"></textarea>
+        </div>
+  `;
 
   modalOverlay.innerHTML = `
     <div class="modal tier-themed" style="--modal-tier-color: ${color}">
@@ -1718,27 +3219,16 @@ function openAddModal({ parentId, type }) {
         <div class="modal-title">${title}</div>
       </div>
       <div class="modal-body">
-        <div class="form-group">
-          <label class="form-label" for="f-role">Role / Title</label>
-          <input class="form-input" id="f-role" type="text" placeholder="e.g. Quality Manager" autocomplete="off">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="f-name">Name <span style="color:var(--silver); font-weight:500; text-transform:none; letter-spacing:0">(optional)</span></label>
-          <input class="form-input" id="f-name" type="text" placeholder="e.g. Jane Smith" autocomplete="off">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="f-notes">Notes <span style="color:var(--silver); font-weight:500; text-transform:none; letter-spacing:0">(optional)</span></label>
-          <textarea class="form-textarea" id="f-notes" placeholder="Responsibilities, reporting lines, key projects, internal context…"></textarea>
-        </div>
+        ${formFields}
       </div>
       <div class="modal-footer">
-        <button class="btn btn-outline" data-action="close-modal">Cancel</button>
-        <button class="btn btn-primary" data-action="save-add" data-parent-id="${actualParentId || ''}">Create role</button>
+        <button class="btn btn-outline" data-action="close-modal">${t("cancel")}</button>
+        <button class="btn btn-primary" data-action="save-add" data-parent-id="${actualParentId || ''}" data-node-type="${isDept ? 'department' : 'role'}">${isDept ? t('createDept') : t('createRole')}</button>
       </div>
     </div>
   `;
   modalOverlay.classList.add('is-open');
-  setTimeout(() => document.getElementById('f-role')?.focus(), 50);
+  setTimeout(() => (document.getElementById('f-role') || document.getElementById('f-name'))?.focus(), 50);
 }
 
 function openDeleteConfirm(id) {
@@ -1766,7 +3256,7 @@ function openDeleteConfirm(id) {
         `}
       </div>
       <div class="modal-footer">
-        <button class="btn btn-outline" data-action="close-modal">Cancel</button>
+        <button class="btn btn-outline" data-action="close-modal">${t("cancel")}</button>
         <button class="btn btn-danger" data-action="confirm-delete" data-id="${id}">Delete role</button>
       </div>
     </div>
@@ -1788,7 +3278,7 @@ function openResetConfirm() {
         <div class="confirm-warning">All current entries and notes will be lost.</div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-outline" data-action="close-modal">Cancel</button>
+        <button class="btn btn-outline" data-action="close-modal">${t("cancel")}</button>
         <button class="btn btn-danger" data-action="confirm-reset">Reset chart</button>
       </div>
     </div>
@@ -1798,22 +3288,49 @@ function openResetConfirm() {
 
 // -------- Modal save handlers --------
 function saveEditFromModal(id) {
-  const name = document.getElementById('f-name').value.trim();
-  const role = document.getElementById('f-role').value.trim();
-  const notes = document.getElementById('f-notes').value.trim();
-  updateNode(id, { name, role, notes });
+  const node = state.nodes[id];
+  if (!node) return;
+  const isDept = isDepartment(node);
+  const name = (document.getElementById('f-name')?.value || '').trim();
+  const role = isDept ? '' : (document.getElementById('f-role')?.value || '').trim();
+  const notes = (document.getElementById('f-notes')?.value || '').trim();
+  const updates = { name, role, notes };
+  if (!isDept) {
+    const billableCb = document.getElementById('f-billable');
+    const rateInput = document.getElementById('f-rate');
+    updates.billable = !!(billableCb && billableCb.checked);
+    const rateVal = parseFloat(rateInput?.value);
+    updates.chargeRate = updates.billable && !isNaN(rateVal) && rateVal > 0 ? rateVal : null;
+  }
+  updateNode(id, updates);
   closeModal();
 }
 
-function saveAddFromModal(parentId) {
-  const name = document.getElementById('f-name').value.trim();
-  const role = document.getElementById('f-role').value.trim();
-  const notes = document.getElementById('f-notes').value.trim();
-  if (!name && !role) {
-    document.getElementById('f-role').focus();
-    return;
+function saveAddFromModal(parentId, nodeType) {
+  const isDept = nodeType === 'department';
+  const name = (document.getElementById('f-name')?.value || '').trim();
+  const role = isDept ? '' : (document.getElementById('f-role')?.value || '').trim();
+  const notes = (document.getElementById('f-notes')?.value || '').trim();
+  if (isDept) {
+    if (!name) {
+      document.getElementById('f-name').focus();
+      return;
+    }
+  } else {
+    if (!name && !role) {
+      document.getElementById('f-role').focus();
+      return;
+    }
   }
-  addNode({ parentId: parentId || null, name, role, notes });
+  const opts = { parentId: parentId || null, name, role, notes, type: isDept ? 'department' : 'role' };
+  if (!isDept) {
+    const billableCb = document.getElementById('f-billable');
+    const rateInput = document.getElementById('f-rate');
+    opts.billable = !!(billableCb && billableCb.checked);
+    const rateVal = parseFloat(rateInput?.value);
+    opts.chargeRate = opts.billable && !isNaN(rateVal) && rateVal > 0 ? rateVal : null;
+  }
+  addNode(opts);
   closeModal();
 }
 
@@ -1851,6 +3368,745 @@ function importJson(file) {
   reader.readAsText(file);
 }
 
+// ============================================================
+//   VERSIONS / NAMED LOCAL SAVES
+//   Saved snapshots live in localStorage under a separate key.
+//   These are independent of the live auto-save state.
+// ============================================================
+const VERSIONS_KEY = 'pfi_org_chart_versions_v1';
+
+function getSavedVersions() {
+  try {
+    const raw = localStorage.getItem(VERSIONS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (_) {
+    return [];
+  }
+}
+
+function setSavedVersions(versions) {
+  try {
+    localStorage.setItem(VERSIONS_KEY, JSON.stringify(versions));
+    return true;
+  } catch (e) {
+    console.warn('Saving versions failed:', e);
+    return false;
+  }
+}
+
+function saveCurrentAsVersion(name) {
+  const trimmed = (name || '').trim();
+  if (!trimmed) return false;
+  const allNodes = Object.values(state.nodes);
+  const roles = allNodes.filter(n => !isDepartment(n));
+  const filled = roles.filter(n => !isVacant(n)).length;
+  const depts = allNodes.length - roles.length;
+
+  const version = {
+    id: 'v_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    name: trimmed,
+    savedAt: new Date().toISOString(),
+    stats: {
+      tiers: maxTier(),
+      roles: roles.length,
+      headcount: filled,
+      departments: depts
+    },
+    state: JSON.parse(JSON.stringify(state)) // deep clone
+  };
+
+  const versions = getSavedVersions();
+  versions.unshift(version); // newest first
+  return setSavedVersions(versions);
+}
+
+function loadVersion(versionId) {
+  const versions = getSavedVersions();
+  const v = versions.find(x => x.id === versionId);
+  if (!v || !v.state) return false;
+  state = {
+    nodes: v.state.nodes || {},
+    rootId: v.state.rootId,
+    collapsed: v.state.collapsed || {}
+  };
+  saveState();
+  render();
+  return true;
+}
+
+function deleteVersion(versionId) {
+  const versions = getSavedVersions().filter(v => v.id !== versionId);
+  return setSavedVersions(versions);
+}
+
+function formatVersionDate(iso) {
+  try {
+    const d = new Date(iso);
+    const now = new Date();
+    const sameDay = d.toDateString() === now.toDateString();
+    const opts = sameDay
+      ? { hour: 'numeric', minute: '2-digit' }
+      : { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit' };
+    return sameDay
+      ? `Today, ${d.toLocaleTimeString(undefined, opts)}`
+      : d.toLocaleString(undefined, opts);
+  } catch (_) {
+    return iso;
+  }
+}
+
+function openVersionsModal() {
+  renderVersionsModal();
+  modalOverlay.classList.add('is-open');
+}
+
+function renderVersionsModal() {
+  const versions = getSavedVersions();
+  const allNodes = Object.values(state.nodes);
+  const filledNow = allNodes.filter(n => !isDepartment(n) && !isVacant(n)).length;
+  const tiersNow = maxTier();
+  const rolesNow = allNodes.filter(n => !isDepartment(n)).length;
+
+  const versionItems = versions.length === 0 ? `
+    <div class="versions-empty">
+      <div class="versions-empty-eyebrow">No saved versions yet</div>
+      <div class="versions-empty-text">Save the current chart as a named version to create a restore point you can come back to later. Useful before reorgs, headcount changes, or any structural shake-up.</div>
+    </div>
+  ` : versions.map(v => `
+    <div class="version-item">
+      <div class="version-info">
+        <div class="version-name">${escapeHtml(v.name)}</div>
+        <div class="version-meta">
+          <span>${formatVersionDate(v.savedAt)}</span>
+          <span><strong>${v.stats?.tiers ?? '\u2014'}</strong> tiers</span>
+          <span><strong>${v.stats?.roles ?? '\u2014'}</strong> roles</span>
+          <span><strong>${v.stats?.headcount ?? '\u2014'}</strong> headcount</span>
+          ${v.stats?.departments ? `<span><strong>${v.stats.departments}</strong> depts</span>` : ''}
+        </div>
+      </div>
+      <div class="version-actions">
+        <button class="btn btn-outline btn-sm" data-action="confirm-load-version" data-version-id="${v.id}">Load</button>
+        <button class="btn btn-ghost btn-sm" data-action="confirm-delete-version" data-version-id="${v.id}" title="Delete this version">${ICONS.trash}</button>
+      </div>
+    </div>
+  `).join('');
+
+  modalOverlay.innerHTML = `
+    <div class="modal versions-modal">
+      <div class="modal-header">
+        <div class="modal-eyebrow">Local saves \u00b7 Browser storage</div>
+        <div class="modal-title">Saved versions</div>
+      </div>
+
+      <div class="modal-body">
+        <div class="versions-save">
+          <label class="form-label" for="f-version-name" style="margin-bottom: 8px">Save current chart as a new version</label>
+          <div class="versions-save-row">
+            <input class="form-input" id="f-version-name" type="text" placeholder="e.g. Q1 2026 reorg plan, Pre-budget v2" autocomplete="off">
+            <button class="btn btn-primary" data-action="save-current-version">${ICONS.save || ICONS.download} Save version</button>
+          </div>
+          <div class="form-help" style="margin-top: 8px">
+            Snapshots live in this browser's local storage \u2014 fast, private, and survive across sessions.
+            Current state: <strong style="color:var(--navy-deep)">${tiersNow} tiers, ${rolesNow} roles, ${filledNow} headcount</strong>.
+          </div>
+        </div>
+
+        <div class="versions-section-eyebrow">Saved versions (${versions.length})</div>
+        <div class="versions-list">
+          ${versionItems}
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" data-action="close-modal">Close</button>
+      </div>
+    </div>
+  `;
+}
+
+function handleSaveCurrentVersion() {
+  const input = document.getElementById('f-version-name');
+  const name = (input?.value || '').trim();
+  if (!name) {
+    input?.focus();
+    return;
+  }
+  const ok = saveCurrentAsVersion(name);
+  if (!ok) {
+    alert('Could not save version. Browser storage may be full.');
+    return;
+  }
+  // Re-render the modal to show the new version
+  renderVersionsModal();
+}
+
+function handleConfirmLoadVersion(versionId) {
+  const versions = getSavedVersions();
+  const v = versions.find(x => x.id === versionId);
+  if (!v) return;
+  modalOverlay.innerHTML = `
+    <div class="modal confirm-modal">
+      <div class="modal-header">
+        <div class="modal-eyebrow" style="color: var(--orange-core)">Load version</div>
+        <div class="modal-title">Restore <em style="color:var(--orange-core); font-style:italic">${escapeHtml(v.name)}</em>?</div>
+      </div>
+      <div class="modal-body">
+        <div class="confirm-message">
+          This will replace your current working chart with the snapshot from <strong>${formatVersionDate(v.savedAt)}</strong>.
+        </div>
+        <div class="confirm-warning" style="background: rgba(255,117,53,0.12); border-left-color: var(--orange-core); color: var(--navy-deep)">
+          Your current state will be lost unless you save it as a version first.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" data-action="open-versions">Back</button>
+        <button class="btn btn-primary" data-action="do-load-version" data-version-id="${versionId}">Load this version</button>
+      </div>
+    </div>
+  `;
+}
+
+function handleConfirmDeleteVersion(versionId) {
+  const versions = getSavedVersions();
+  const v = versions.find(x => x.id === versionId);
+  if (!v) return;
+  modalOverlay.innerHTML = `
+    <div class="modal confirm-modal">
+      <div class="modal-header">
+        <div class="modal-eyebrow" style="color: var(--danger)">Delete version</div>
+        <div class="modal-title">Delete <em>${escapeHtml(v.name)}</em>?</div>
+      </div>
+      <div class="modal-body">
+        <div class="confirm-message">
+          Delete the saved version from <strong>${formatVersionDate(v.savedAt)}</strong>?
+        </div>
+        <div class="confirm-warning">This cannot be undone.</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" data-action="open-versions">Back</button>
+        <button class="btn btn-danger" data-action="do-delete-version" data-version-id="${versionId}">Delete version</button>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+//   EXCEL EXPORT
+// ============================================================
+
+// Walks the tree depth-first, producing rows for the Org Chart sheet.
+// Each row has one filled cell (in the column matching the role's tier)
+// and empty cells in all other columns. Output is a 2D array.
+function buildOrgChartRows() {
+  const maxT = Math.max(maxTier(), 1);
+  const rows = [];
+
+  // Header row
+  const header = [];
+  for (let i = 1; i <= maxT; i++) {
+    header.push({ kind: 'header', value: `Tier ${String(i).padStart(2, '0')}`, tier: i });
+  }
+  rows.push(header);
+
+  // Depth-first traversal preserves visual top-to-bottom order
+  function walk(nodeId) {
+    const node = state.nodes[nodeId];
+    if (!node) return;
+    const row = new Array(maxT).fill(null);
+    const dept = isDepartment(node);
+    row[node.tier - 1] = {
+      kind: 'cell',
+      role: dept ? '' : (node.role || ''),
+      name: node.name || '',
+      vacant: isVacant(node),
+      department: dept,
+      directCount: effectiveDirectReports(nodeId),
+      totalCount: totalHeadcount(nodeId),
+      tier: node.tier
+    };
+    rows.push(row);
+    getChildren(nodeId).forEach(c => walk(c.id));
+  }
+
+  if (state.rootId && state.nodes[state.rootId]) {
+    walk(state.rootId);
+  }
+
+  return { rows, maxT };
+}
+
+// Flat directory rows for the Directory sheet
+function buildDirectoryRows() {
+  const rows = [];
+  rows.push({
+    kind: 'header',
+    cells: ['Tier', 'Type', 'Role / Dept', 'Name', 'Reports To', 'Direct Reports', 'Total Under', 'Status', 'Notes']
+  });
+
+  function walk(nodeId) {
+    const node = state.nodes[nodeId];
+    if (!node) return;
+    const parent = node.parentId ? state.nodes[node.parentId] : null;
+    const parentLabel = parent
+      ? ((parent.role || parent.name || 'Untitled') + (parent.name && parent.role ? ' \u2014 ' + parent.name : ''))
+      : '\u2014';
+    const dept = isDepartment(node);
+    const vacant = isVacant(node);
+    const direct = effectiveDirectReports(nodeId);
+    const total = totalHeadcount(nodeId);
+    const status = dept ? 'Department' : (vacant ? 'Vacant' : (node.name ? 'Filled' : 'Unnamed'));
+
+    rows.push({
+      kind: 'cell',
+      tier: node.tier,
+      vacant,
+      department: dept,
+      cells: [
+        `Tier ${String(node.tier).padStart(2, '0')}`,
+        dept ? 'Department' : 'Role',
+        dept ? (node.name || '') : (node.role || ''),
+        dept ? '' : (node.name || ''),
+        parentLabel,
+        direct > 0 ? direct : '',
+        total > 0 ? total : '',
+        status,
+        node.notes || ''
+      ]
+    });
+
+    getChildren(nodeId).forEach(c => walk(c.id));
+  }
+
+  if (state.rootId && state.nodes[state.rootId]) {
+    walk(state.rootId);
+  }
+
+  return rows;
+}
+
+// -------- Excel colour helpers --------
+function lightenHex(hex, factor) {
+  // factor 0 = no change, 1 = white. Returns hex without '#'.
+  const h = hex.replace('#', '');
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  const nr = Math.round(r + (255 - r) * factor);
+  const ng = Math.round(g + (255 - g) * factor);
+  const nb = Math.round(b + (255 - b) * factor);
+  return [nr, ng, nb].map(x => x.toString(16).padStart(2, '0')).join('').toUpperCase();
+}
+
+function hexToRgba(hex, alpha) {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function xlBorder(color) {
+  const c = { style: 'thin', color: { rgb: color } };
+  return { top: c, bottom: c, left: c, right: c };
+}
+
+// -------- Preview modal --------
+let currentExportTab = 'chart';
+
+function openExportPreviewModal() {
+  if (!state.rootId || Object.keys(state.nodes).length === 0) {
+    alert('There\u2019s nothing to export yet. Add at least one role first.');
+    return;
+  }
+  currentExportTab = 'chart';
+  renderExportPreviewModal();
+  modalOverlay.classList.add('is-open');
+}
+
+function renderExportPreviewModal() {
+  const allNodes = Object.values(state.nodes);
+  const filledCount = allNodes.filter(n => !isVacant(n)).length;
+  const vacantCount = allNodes.length - filledCount;
+  const tiersUsed = maxTier();
+
+  modalOverlay.innerHTML = `
+    <div class="modal export-preview-modal">
+      <div class="modal-header">
+        <div class="modal-eyebrow">Preview \u00b7 Excel export</div>
+        <div class="modal-title">PFi Organisation Chart</div>
+      </div>
+
+      <div class="export-summary">
+        <div class="export-summary-item">
+          <span class="export-summary-num">${tiersUsed}</span>
+          <span class="export-summary-label">Tiers</span>
+        </div>
+        <div class="export-summary-item">
+          <span class="export-summary-num">${allNodes.length}</span>
+          <span class="export-summary-label">Roles</span>
+        </div>
+        <div class="export-summary-item">
+          <span class="export-summary-num">${filledCount}</span>
+          <span class="export-summary-label">Headcount</span>
+        </div>
+        <div class="export-summary-item">
+          <span class="export-summary-num" style="color:${vacantCount > 0 ? 'var(--danger)' : 'var(--silver)'}">${vacantCount}</span>
+          <span class="export-summary-label">Vacant</span>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div class="export-tabs">
+          <button class="export-tab ${currentExportTab === 'chart' ? 'is-active' : ''}" data-action="switch-export-tab" data-tab="chart">Sheet 1 \u00b7 Org Chart</button>
+          <button class="export-tab ${currentExportTab === 'directory' ? 'is-active' : ''}" data-action="switch-export-tab" data-tab="directory">Sheet 2 \u00b7 Directory</button>
+        </div>
+        <div class="export-preview-body" id="export-preview-body">
+          ${currentExportTab === 'chart' ? renderOrgChartPreview() : renderDirectoryPreview()}
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <span class="export-meta">Two sheets, ready to download as <strong>.xlsx</strong></span>
+        <button class="btn btn-outline" data-action="close-modal">${t("cancel")}</button>
+        <button class="btn btn-primary" data-action="confirm-export-excel">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 7l4 4 4-4M2 13.5h12"/></svg>
+          Download .xlsx
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function renderOrgChartPreview() {
+  const { rows, maxT } = buildOrgChartRows();
+
+  let html = '<table class="preview-orgchart"><thead><tr>';
+  for (let i = 1; i <= maxT; i++) {
+    const color = tierColor(i);
+    html += `<th>Tier ${String(i).padStart(2, '0')}<span class="tier-stripe" style="background:${color}"></span></th>`;
+  }
+  html += '</tr></thead><tbody>';
+
+  for (let r = 1; r < rows.length; r++) {
+    html += '<tr>';
+    for (let c = 0; c < maxT; c++) {
+      const cell = rows[r][c];
+      if (!cell) {
+        html += '<td class="empty"></td>';
+      } else {
+        const color = tierColor(cell.tier);
+        const bgTint = hexToRgba(color, 0.06);
+        const isDept = cell.department;
+        const metaParts = [];
+        if (isDept) {
+          metaParts.push(`${cell.totalCount} ${cell.totalCount === 1 ? 'person' : 'people'}`);
+        } else if (cell.directCount > 0) {
+          metaParts.push(cell.totalCount > cell.directCount
+            ? `${cell.directCount}/${cell.totalCount} reports`
+            : `${cell.directCount} report${cell.directCount === 1 ? '' : 's'}`);
+        }
+        const cellClasses = ['filled-cell'];
+        if (cell.vacant) cellClasses.push('is-vacant');
+        if (isDept) cellClasses.push('is-department');
+
+        html += `<td style="--cell-tier-color: ${color}; background: ${isDept ? 'var(--navy-deep)' : bgTint}">
+          <div class="${cellClasses.join(' ')}">
+            ${isDept ? '<span class="cell-dept-label">Department</span>' : ''}
+            <div class="cell-role">${escapeHtml(isDept ? cell.name : cell.role) || '<em style="color:var(--silver)">\u2014</em>'}</div>
+            ${!isDept && cell.name ? `<div class="cell-name">${escapeHtml(cell.name)}</div>` : ''}
+            ${!isDept && cell.vacant ? '<div class="cell-name">Position Vacant</div>' : ''}
+            ${metaParts.length ? `<div class="cell-meta">${metaParts.join(' \u00b7 ')}</div>` : ''}
+          </div>
+        </td>`;
+      }
+    }
+    html += '</tr>';
+  }
+  html += '</tbody></table>';
+  return html;
+}
+
+function renderDirectoryPreview() {
+  const rows = buildDirectoryRows();
+  const headers = rows[0].cells;
+
+  let html = '<table class="preview-directory"><thead><tr>';
+  headers.forEach(h => { html += `<th>${escapeHtml(h)}</th>`; });
+  html += '</tr></thead><tbody>';
+
+  for (let r = 1; r < rows.length; r++) {
+    const row = rows[r];
+    const color = tierColor(row.tier);
+    html += '<tr>';
+    row.cells.forEach((val, ci) => {
+      if (ci === 0) {
+        // Tier
+        html += `<td class="dir-tier" style="--cell-tier-color: ${color}">${escapeHtml(String(val))}</td>`;
+      } else if (ci === 1) {
+        // Type
+        const isDept = val === 'Department';
+        html += `<td style="color: ${isDept ? 'var(--orange-core)' : 'var(--navy-mid)'}; font-weight:${isDept ? 700 : 500}">${escapeHtml(String(val))}</td>`;
+      } else if (ci === 2) {
+        // Role / Dept name
+        html += `<td class="dir-role">${escapeHtml(String(val)) || '<span class="dir-empty">\u2014</span>'}</td>`;
+      } else if (ci === 3) {
+        // Person Name
+        const cls = row.vacant ? 'dir-vacant' : (val ? 'dir-name' : 'dir-empty');
+        const display = row.department ? '<span class="dir-empty">\u2014</span>' : (val ? escapeHtml(String(val)) : '\u2014');
+        html += `<td class="${cls}">${display}</td>`;
+      } else if (ci === 7) {
+        // Status
+        const sv = String(val);
+        let statusClass = 'is-unnamed';
+        if (sv === 'Vacant') statusClass = 'is-vacant';
+        else if (sv === 'Filled') statusClass = 'is-filled';
+        else if (sv === 'Department') statusClass = 'is-department';
+        html += `<td><span class="dir-status ${statusClass}">${escapeHtml(sv)}</span></td>`;
+      } else if (ci === 8) {
+        // Notes
+        html += `<td><div class="dir-notes">${val ? escapeHtml(String(val)) : ''}</div></td>`;
+      } else {
+        html += `<td>${val === '' ? '<span class="dir-empty">\u2014</span>' : escapeHtml(String(val))}</td>`;
+      }
+    });
+    html += '</tr>';
+  }
+  html += '</tbody></table>';
+  return html;
+}
+
+function switchExportTab(tab) {
+  currentExportTab = tab;
+  const body = document.getElementById('export-preview-body');
+  if (body) {
+    body.innerHTML = tab === 'chart' ? renderOrgChartPreview() : renderDirectoryPreview();
+  }
+  document.querySelectorAll('.export-tab').forEach(t => {
+    t.classList.toggle('is-active', t.dataset.tab === tab);
+  });
+}
+
+// -------- Actual Excel file generation --------
+async function ensureXlsxReady() {
+  if (typeof XLSX !== 'undefined') return true;
+  for (let i = 0; i < 100; i++) {
+    await new Promise(r => setTimeout(r, 100));
+    if (typeof XLSX !== 'undefined') return true;
+  }
+  return false;
+}
+
+async function doExportExcel() {
+  const ready = await ensureXlsxReady();
+  if (!ready) {
+    alert('The Excel library could not be loaded. Please check your internet connection and try again.');
+    return;
+  }
+
+  const { rows: orgRows, maxT } = buildOrgChartRows();
+  const dirRows = buildDirectoryRows();
+  const wb = XLSX.utils.book_new();
+
+  // ===== Sheet 1: Org Chart =====
+  const orgAoA = orgRows.map((row, rIdx) => {
+    return row.map(cell => {
+      if (!cell) return '';
+      if (cell.kind === 'header') return cell.value;
+      if (cell.department) {
+        // Department cell: "DEPT: <name>\n<headcount> people"
+        let content = 'DEPT: ' + (cell.name || '');
+        if (cell.totalCount > 0) {
+          content += '\n' + cell.totalCount + ' ' + (cell.totalCount === 1 ? 'person' : 'people');
+        }
+        return content;
+      }
+      let content = cell.role || '';
+      if (cell.vacant) content += '\nPosition Vacant';
+      else if (cell.name) content += '\n' + cell.name;
+      if (cell.directCount > 0) {
+        content += '\n' + (cell.totalCount > cell.directCount
+          ? `${cell.directCount}/${cell.totalCount} reports`
+          : `${cell.directCount} report${cell.directCount === 1 ? '' : 's'}`);
+      }
+      return content;
+    });
+  });
+
+  const ws1 = XLSX.utils.aoa_to_sheet(orgAoA);
+
+  for (let r = 0; r < orgRows.length; r++) {
+    for (let c = 0; c < maxT; c++) {
+      const cellRef = XLSX.utils.encode_cell({ r, c });
+      const cellData = orgRows[r][c];
+      if (!ws1[cellRef]) ws1[cellRef] = { v: '', t: 's' };
+
+      if (r === 0) {
+        // Header row
+        ws1[cellRef].s = {
+          fill: { patternType: 'solid', fgColor: { rgb: '0B1F3A' } },
+          font: { color: { rgb: 'FFFFFF' }, bold: true, name: 'Calibri', sz: 11 },
+          alignment: { horizontal: 'left', vertical: 'center', indent: 1 },
+          border: xlBorder('FFFFFF')
+        };
+      } else if (cellData) {
+        const tierHex = tierColor(cellData.tier).replace('#', '');
+        if (cellData.department) {
+          // Department: navy fill with white/orange text
+          ws1[cellRef].s = {
+            fill: { patternType: 'solid', fgColor: { rgb: '152E54' } },
+            font: { color: { rgb: 'FFFFFF' }, bold: true, name: 'Calibri', sz: 10 },
+            alignment: { wrapText: true, vertical: 'top', horizontal: 'left', indent: 1 },
+            border: {
+              top: { style: 'thin', color: { rgb: '1D3E6F' } },
+              bottom: { style: 'thin', color: { rgb: '1D3E6F' } },
+              right: { style: 'thin', color: { rgb: '1D3E6F' } },
+              left: { style: 'medium', color: { rgb: tierHex } }
+            }
+          };
+        } else {
+          // Role cell: light tier-tinted background
+          const fill = lightenHex(tierHex, 0.90);
+          ws1[cellRef].s = {
+            fill: { patternType: 'solid', fgColor: { rgb: fill } },
+            font: {
+              color: { rgb: cellData.vacant ? '8FA3B8' : '0B1F3A' },
+              bold: !cellData.vacant,
+              italic: cellData.vacant,
+              name: 'Calibri',
+              sz: 10
+            },
+            alignment: { wrapText: true, vertical: 'top', horizontal: 'left', indent: 1 },
+            border: {
+              top: { style: 'thin', color: { rgb: 'E8EFF5' } },
+              bottom: { style: 'thin', color: { rgb: 'E8EFF5' } },
+              right: { style: 'thin', color: { rgb: 'E8EFF5' } },
+              left: { style: 'medium', color: { rgb: tierHex } }
+            }
+          };
+        }
+      } else {
+        // Empty cell
+        ws1[cellRef].s = {
+          fill: { patternType: 'solid', fgColor: { rgb: 'F4F6F9' } },
+          border: xlBorder('E8EFF5')
+        };
+      }
+    }
+  }
+
+  ws1['!cols'] = Array(maxT).fill({ wch: 32 });
+  ws1['!rows'] = orgRows.map((r, i) => {
+    if (i === 0) return { hpt: 28 };
+    let maxLines = 1;
+    r.forEach(cell => {
+      if (cell && cell.kind === 'cell') {
+        let lines = 1;
+        if (cell.name || cell.vacant) lines++;
+        if (cell.directCount > 0 || cell.department) lines++;
+        if (lines > maxLines) maxLines = lines;
+      }
+    });
+    return { hpt: 18 + maxLines * 14 };
+  });
+  ws1['!views'] = [{ state: 'frozen', ySplit: 1 }];
+
+  XLSX.utils.book_append_sheet(wb, ws1, 'Org Chart');
+
+  // ===== Sheet 2: Directory =====
+  const dirAoA = dirRows.map(row => row.cells);
+  const ws2 = XLSX.utils.aoa_to_sheet(dirAoA);
+  const colCount = dirRows[0].cells.length;
+
+  for (let r = 0; r < dirRows.length; r++) {
+    for (let c = 0; c < colCount; c++) {
+      const cellRef = XLSX.utils.encode_cell({ r, c });
+      if (!ws2[cellRef]) ws2[cellRef] = { v: '', t: 's' };
+
+      if (r === 0) {
+        ws2[cellRef].s = {
+          fill: { patternType: 'solid', fgColor: { rgb: '0B1F3A' } },
+          font: { color: { rgb: 'FFFFFF' }, bold: true, name: 'Calibri', sz: 10 },
+          alignment: { horizontal: 'left', vertical: 'center', indent: 1 },
+          border: xlBorder('FFFFFF')
+        };
+      } else {
+        const row = dirRows[r];
+        const tierHex = tierColor(row.tier).replace('#', '');
+        const isVacantRow = row.vacant;
+        const isDeptRow = row.department;
+        const bandFill = r % 2 === 0 ? 'FFFFFF' : 'F4F6F9';
+
+        ws2[cellRef].s = {
+          fill: { patternType: 'solid', fgColor: { rgb: bandFill } },
+          font: {
+            color: { rgb: isVacantRow ? 'B83410' : (isDeptRow ? 'E85C1A' : '0B1F3A') },
+            italic: isVacantRow,
+            bold: c === 2 || isDeptRow,
+            name: 'Calibri',
+            sz: 10
+          },
+          alignment: {
+            wrapText: c === 8,
+            vertical: 'top',
+            horizontal: (c === 0 || c === 5 || c === 6) ? 'center' : 'left',
+            indent: 1
+          },
+          border: xlBorder('E8EFF5')
+        };
+
+        // Tier column: solid tier-colour
+        if (c === 0) {
+          ws2[cellRef].s.fill = { patternType: 'solid', fgColor: { rgb: tierHex } };
+          ws2[cellRef].s.font = { color: { rgb: 'FFFFFF' }, bold: true, name: 'Calibri', sz: 10 };
+        }
+
+        // Type column: bold for departments
+        if (c === 1 && isDeptRow) {
+          ws2[cellRef].s.font.color = { rgb: 'E85C1A' };
+          ws2[cellRef].s.font.bold = true;
+        }
+
+        // Status column
+        if (c === 7) {
+          const status = row.cells[7];
+          if (status === 'Vacant') {
+            ws2[cellRef].s.font.color = { rgb: 'B83410' };
+            ws2[cellRef].s.font.bold = true;
+          } else if (status === 'Filled') {
+            ws2[cellRef].s.font.color = { rgb: '1B8556' };
+            ws2[cellRef].s.font.bold = true;
+          } else if (status === 'Department') {
+            ws2[cellRef].s.font.color = { rgb: 'E85C1A' };
+            ws2[cellRef].s.font.bold = true;
+          }
+        }
+      }
+    }
+  }
+
+  ws2['!cols'] = [
+    { wch: 10 }, // Tier
+    { wch: 12 }, // Type
+    { wch: 32 }, // Role / Dept
+    { wch: 22 }, // Name
+    { wch: 30 }, // Reports To
+    { wch: 16 }, // Direct
+    { wch: 14 }, // Total
+    { wch: 13 }, // Status
+    { wch: 44 }  // Notes
+  ];
+  ws2['!rows'] = dirRows.map((r, i) => ({ hpt: i === 0 ? 26 : 24 }));
+  ws2['!views'] = [{ state: 'frozen', ySplit: 1 }];
+
+  XLSX.utils.book_append_sheet(wb, ws2, 'Directory');
+
+  // Write file
+  const dateStr = new Date().toISOString().slice(0, 10);
+  XLSX.writeFile(wb, `PFi-Org-Chart-${dateStr}.xlsx`);
+}
+
 // -------- Event delegation --------
 document.addEventListener('click', (e) => {
   // Outside-menu clicks close the open dropdown
@@ -1883,7 +4139,12 @@ document.addEventListener('click', (e) => {
 
     case 'add-child':
       openMenuId = null;
-      openAddModal({ parentId: id, type: 'child' });
+      openAddModal({ parentId: id, type: 'child', nodeType: 'role' });
+      break;
+
+    case 'add-department':
+      openMenuId = null;
+      openAddModal({ parentId: id, type: 'child', nodeType: 'department' });
       break;
 
     case 'add-sibling': {
@@ -1891,7 +4152,8 @@ document.addEventListener('click', (e) => {
       const node = state.nodes[id];
       if (!node || !node.parentId) return;
       openMenuId = null;
-      openAddModal({ parentId: id, type: 'sibling' });
+      // Adding a peer of a department creates another department; peer of a role creates a role
+      openAddModal({ parentId: id, type: 'sibling', nodeType: isDepartment(node) ? 'department' : 'role' });
       break;
     }
 
@@ -1919,12 +4181,79 @@ document.addEventListener('click', (e) => {
       break;
 
     case 'save-add':
-      saveAddFromModal(actionEl.dataset.parentId || null);
+      saveAddFromModal(actionEl.dataset.parentId || null, actionEl.dataset.nodeType || 'role');
       break;
 
     case 'add-root':
-      openAddModal({ parentId: null, type: 'root' });
+      openAddModal({ parentId: null, type: 'root', nodeType: 'role' });
       break;
+
+    case 'open-versions':
+      openVersionsModal();
+      break;
+
+    case 'save-current-version':
+      handleSaveCurrentVersion();
+      break;
+
+    case 'confirm-load-version':
+      handleConfirmLoadVersion(actionEl.dataset.versionId);
+      break;
+
+    case 'do-load-version':
+      if (loadVersion(actionEl.dataset.versionId)) {
+        closeModal();
+      }
+      break;
+
+    case 'confirm-delete-version':
+      handleConfirmDeleteVersion(actionEl.dataset.versionId);
+      break;
+
+    case 'do-delete-version':
+      deleteVersion(actionEl.dataset.versionId);
+      // Re-open the versions modal to show the updated list
+      openVersionsModal();
+      break;
+
+    case 'toggle-lang-menu': {
+      e.stopPropagation();
+      const btn = document.getElementById('lang-btn');
+      const dd = document.getElementById('lang-dropdown');
+      if (!btn || !dd) break;
+      const opening = !dd.classList.contains('is-open');
+      if (opening) renderLanguageDropdown();
+      btn.classList.toggle('is-open', opening);
+      dd.classList.toggle('is-open', opening);
+      break;
+    }
+
+    case 'select-language':
+      switchLanguage(actionEl.dataset.lang);
+      break;
+
+    case 'reset-logo':
+      e.stopPropagation();
+      resetCustomLogo();
+      break;
+
+    case 'toggle-billable': {
+      // Click anywhere on the toggle row toggles the checkbox
+      if (e.target.closest('.form-toggle-label') && e.target.tagName === 'LABEL') {
+        // Allow native label behavior for keyboard accessibility
+        return;
+      }
+      e.preventDefault();
+      const cb = document.getElementById('f-billable');
+      const row = document.getElementById('billable-toggle-row');
+      const rateRow = document.getElementById('billable-rate-row');
+      if (!cb || !row || !rateRow) break;
+      cb.checked = !cb.checked;
+      row.classList.toggle('is-on', cb.checked);
+      rateRow.classList.toggle('is-visible', cb.checked);
+      if (cb.checked) setTimeout(() => document.getElementById('f-rate')?.focus(), 60);
+      break;
+    }
 
     case 'seed-default':
       seedDefault();
@@ -1942,6 +4271,28 @@ document.addEventListener('click', (e) => {
     case 'export':
       exportJson();
       break;
+
+    case 'export-excel':
+      openExportPreviewModal();
+      break;
+
+    case 'switch-export-tab':
+      switchExportTab(actionEl.dataset.tab);
+      break;
+
+    case 'confirm-export-excel': {
+      // Show "preparing" state on the button
+      const btn = actionEl;
+      const original = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<span>Preparing\u2026</span>';
+      doExportExcel().finally(() => {
+        btn.disabled = false;
+        btn.innerHTML = original;
+        closeModal();
+      });
+      break;
+    }
 
     case 'import':
       document.getElementById('file-input').click();
@@ -1986,6 +4337,26 @@ document.getElementById('file-input').addEventListener('change', (e) => {
   const file = e.target.files[0];
   if (file) importJson(file);
   e.target.value = '';
+});
+
+// Logo input
+document.getElementById('logo-input').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (file) uploadCustomLogo(file);
+  e.target.value = '';
+});
+
+// Brand area click opens logo file picker (unless clicking the remove button)
+document.getElementById('brand-area').addEventListener('click', (e) => {
+  if (e.target.closest('[data-action="reset-logo"]')) return;
+  document.getElementById('logo-input').click();
+});
+
+// Outside-click closes the language dropdown
+document.addEventListener('click', (e) => {
+  if (e.target.closest('.lang-switcher')) return;
+  document.getElementById('lang-dropdown')?.classList.remove('is-open');
+  document.getElementById('lang-btn')?.classList.remove('is-open');
 });
 
 // ============================================================
@@ -2209,6 +4580,20 @@ document.addEventListener('keydown', (e) => {
 });
 
 // -------- Init --------
+// Locale-aware initialization for multicontinental use.
+// 1. detectLanguage() reads the user's preferred language from
+//    navigator.languages (which is sourced from OS settings on
+//    Windows/macOS/Linux — display language, keyboard region, etc.)
+//    falling back to Intl.DateTimeFormat locale, then English.
+// 2. applyStaticTranslations() swaps all [data-i18n] elements
+//    (toolbar buttons, header labels, save status) to the detected language.
+// 3. renderLanguageDropdown() populates the language switcher so users
+//    can override the auto-detection.
+// 4. applyCustomLogo() restores any previously-uploaded PNG/JPG/SVG logo.
+currentLang = detectLanguage();
+applyStaticTranslations();
+renderLanguageDropdown();
+applyCustomLogo();
 if (!loadState()) {
   seedDefault();
 }
